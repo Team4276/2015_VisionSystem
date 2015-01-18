@@ -64,14 +64,9 @@ void CTargetInfo::init()
 void CTargetInfo::updateTargetInfo(
         int timeSinceLastCameraFrameMilliseconds,
         int timeLatencyThisCameraFrameMilliseconds,
-        bool isRightGreenTargetLit,
-        bool isLeftGreenTargetLit,
         bool isGrayToteFound,
         float angleFromStraightAheadToTote,
-        float offsetFromCenterlineToToteCenter,
-        bool isRedFound,
-        float angleFromStraightAheadToRed,
-        float distanceToRed)
+        float offsetFromCenterlineToToteCenter)
 {
     init();
 

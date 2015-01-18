@@ -85,19 +85,10 @@ public:
 
 private:
 
- 
-    bool isTooSmallToBeATote(const CToteRectangle& toteRectangle) const;
-    bool isTooBigToBeATote(const CToteRectangle& toteRectangle) const;
-
     float m_tolerancePercentForRadius;
     CGpioLed m_gpioLed;
 
 private:
-    bool filterContoursToFindToteBySize(
-           const std::vector<std::vector<cv::Point> >& listContours,
-            CToteRectangle& bestToteRectangle,
-            float& angleToToteDegrees,
-            float& distanceToToteFeet);
     bool filterContoursToFindLargestBlob(
             const std::vector<std::vector<cv::Point> >& listContours,
             CToteRectangle& bestToteRectangle,

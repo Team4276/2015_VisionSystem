@@ -56,11 +56,9 @@ void CVideoFrame::init()
     m_params.clear();
 }
 
-void CVideoFrame::updateAnnotationInfo(
-        const CToteRectangle& toteRectangleBlue,
-        const CToteRectangle& toteRectangleRed)
+void CVideoFrame::updateAnnotationInfo(const CToteRectangle& ToteRectangleGray)
 {
-    m_toteRectangleGray = toteRectangleBlue;
+    m_toteRectangleGray = ToteRectangleGray;
 }
 
 void CVideoFrame::annotate()
@@ -70,7 +68,7 @@ void CVideoFrame::annotate()
 
     if (m_targetInfo.isGrayToteFound())
     {
-        cv::circle(m_frame, m_toteRectangleGray.m_ptCenter, (int)m_toteRectangleGray.m_radius, colorOrange, 3, 8, 0);
+        cv::circle(m_frame, m_toteRectangleGray.center, (int)m_toteRectangleGray.angle, colorOrange, 3, 8, 0);
     }
 }
 

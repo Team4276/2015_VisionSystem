@@ -50,8 +50,7 @@ public:
 
     void init();
     void updateAnnotationInfo(
-            const CToteRectangle& toteRectangleBlue,
-            const CToteRectangle& toteRectangleRed);
+            const CToteRectangle& ToteRectangleGray);
     void annotate();
     void compress();
 

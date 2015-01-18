@@ -82,10 +82,10 @@ int main(int, char**)
             std::string sBasePath = "/home/";
             sBasePath += HOME_NAME;
             std::string sPath = sBasePath;
-            sPath += "/VisionTarget_Tote_45_angle__426x520.jpg";
+            sPath += "/IMG_0727.JPG";
             cv::Mat frame1 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
             sPath = sBasePath;
-            sPath += "/VisionTarget_Tote_small_angle__426x330.jpg";
+            sPath += "/IMG_0729.JPG";
             cv::Mat frame2 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
             if (frame2.empty())
             {
