@@ -29,6 +29,9 @@
 
 /*******************************************************************************************/
 
+#ifndef CVIDEOFAMEQUEUE_H
+#define	CVIDEOFAMEQUEUE_H
+
 
 class CVideoFrameQueue
 {
@@ -59,3 +62,5 @@ private:
     pthread_mutexattr_t m_mutexattrThread;
     pthread_cond_t m_condThread; // Block thread when remove fails
 };
+
+#endif   //CVIDEOFAMEQUEUE_H

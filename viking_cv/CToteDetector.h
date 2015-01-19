@@ -28,8 +28,8 @@
 /* (tax free) to "Marina High School Educational Foundation"  (Huntington Beach, CA)       */
 /*******************************************************************************************/
 
-#ifndef CBALLDETECTOR_H
-#define	CBALLDETECTOR_H
+#ifndef CTOTEDETECTOR_H
+#define	CTOTEDETECTOR_H
 
 #define DETECT_LARGEST_BLOB_NO_FILTER_BASED_ON_SIZE
 
@@ -83,11 +83,11 @@ public:
     void detectBlobs(CVideoFrame* pFrame, CFrameGrinder* pFrameGrinder);
 
 private:
-
-    float m_tolerancePercentForRadius;
     CGpioLed m_gpioLed;
 
 private:
+    bool isNearSizeOfATote(float width, float height);
+    bool isNearAspectRatioOfATote(float width,  float height);
     bool filterContoursToFindLargestBlob(
             const std::vector<std::vector<cv::Point> >& listContours,
             CToteRectangle& bestToteRectangle,
@@ -95,5 +95,5 @@ private:
             float& distanceToToteFeet);
 };
 
-#endif	/* CBALLDETECTOR_H */
+#endif	/* CTOTEDETECTOR_H */
 

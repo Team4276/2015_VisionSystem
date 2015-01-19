@@ -33,7 +33,7 @@
 #define	DBGMSG_H
 
 #define HOME_NAME "ubuntu"
-#define TEST_USE_JPEGS_NOT_CAMERA
+//#define TEST_USE_JPEGS_NOT_CAMERA
 
 
 extern void dbgInit();

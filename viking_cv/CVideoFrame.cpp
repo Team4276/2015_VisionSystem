@@ -64,14 +64,17 @@ void CVideoFrame::updateAnnotationInfo(const CToteRectangle& ToteRectangleGray)
 void CVideoFrame::annotate()
 {
     const cv::Scalar colorOrange = cv::Scalar(0, 128, 255);
+    const cv::Scalar colorWhite = cv::Scalar(255, 255, 255);
 
+    cv::line(m_frame, cv::Point2f(0,0), cv::Point2f(100,100), colorOrange, 8, 8);
+    
     if (m_targetInfo.isGrayToteFound())
     {
         cv::Point2f rect_points[4];
         m_toteRectangleGray.points(rect_points);
         for (int j = 0; j < 4; j++)
         {
-            cv::line(m_frame, rect_points[j], rect_points[(j + 1) % 4], colorOrange, 3, 8);
+            cv::line(m_frame, rect_points[j], rect_points[(j + 1) % 4], colorWhite, 8, 8);
         }
     }
 }

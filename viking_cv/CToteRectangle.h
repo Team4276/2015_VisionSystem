@@ -28,8 +28,8 @@
 /* (tax free) to "Marina High School Educational Foundation"  (Huntington Beach, CA)       */
 /*******************************************************************************************/
 
-#ifndef CBALLCIRCLE_H
-#define	CBALLCIRCLE_H
+#ifndef CTOTERECTANGLE_H
+#define	CTOTERECTANGLE_H
 
 class CToteRectangle : public cv::RotatedRect
 {
@@ -46,5 +46,5 @@ public:
     std::string displayText() const;
 };
 
-#endif	/* CBALLCIRCLE_H */
+#endif	/* CTOTERECTANGLE_H */
 

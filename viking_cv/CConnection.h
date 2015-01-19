@@ -29,6 +29,8 @@
 
 /*******************************************************************************************/
 
+#ifndef CCONNECTION_H
+#define	CCONNECTION_H
 
 class CConnection
 {
@@ -65,6 +67,7 @@ public:
     int m_port;
     int m_sock;
     int m_client;
+    
     CONNECTION_STATE m_state;
     pthread_t m_threadSender;
     pthread_t m_threadListener;
@@ -91,3 +94,5 @@ public:
 
     CLedStrip m_ledStrip;
 };
+
+#endif  // CCONNECTION_H

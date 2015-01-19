@@ -28,6 +28,9 @@
 /* (tax free) to "Marina High School Educational Foundation"  (Huntington Beach, CA)       */
 /*******************************************************************************************/
 
+#ifndef CFRAMEGRINDER_H
+#define	CFRAMEGRINDER_H
+
 
 #define NUMBER_OF_FRAMES_FOR_QUEUE 8
 
@@ -60,3 +63,5 @@ protected:
     pthread_mutexattr_t m_mutexattrQueue;
     pthread_t m_blob_detect_thread;
 };
+
+#endif //CFRAMEGRINDER_H

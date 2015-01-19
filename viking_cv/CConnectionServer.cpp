@@ -204,9 +204,8 @@ void* browser_server_thread(void* pVoid)
             iCount++;
             if (iCount % 16 == 0)
             {
-                // Note: Annotation only works on the laptop, not the BBB.  
-                // pFrame->annotate();
-                //cv::imshow("pFrame", pFrame->m_frame);
+                pFrame->annotate();
+               //cv::imshow("pFrame", pFrame->m_frame);
                 //cv::waitKey(0);
                 pFrameGrinder->m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
 

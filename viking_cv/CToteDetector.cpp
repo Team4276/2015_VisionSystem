@@ -64,7 +64,6 @@ CToteDetector::~CToteDetector()
 
 void CToteDetector::init()
 {
-    m_tolerancePercentForRadius = 0.20;
 }
 
 void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrinder)
@@ -106,8 +105,6 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
         bool isGrayToteFound = false;
 #ifdef DETECT_LARGEST_BLOB_NO_FILTER_BASED_ON_SIZE
         isGrayToteFound = filterContoursToFindLargestBlob(grayContours, bestToteRectangleGray, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
-
-        isGrayToteFound = true;
 #else
         isGrayToteFound = filterContoursToFindToteBySize(grayContours, bestToteRectangleGray, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
 #endif
@@ -147,12 +144,11 @@ bool CToteDetector::filterContoursToFindLargestBlob(
     for (i = 0; i < listContours.size(); i++)
     {
         tempRect = cv::minAreaRect(cv::Mat(listContours[i]));
-        area = tempRect.boundingRect().width * tempRect.boundingRect().height;
-        if ((area > 100.0) && (area < 400))
+        if (isNearSizeOfATote(tempRect.boundingRect().width,
+                tempRect.boundingRect().height))
         {
-            // Test to see if width and height look like vertical (static) target
-            if ((tempRect.boundingRect().width > (tempRect.boundingRect().height * 2.5))
-                    || (tempRect.boundingRect().height > (tempRect.boundingRect().width * 2.5)))
+            if (isNearAspectRatioOfATote(tempRect.boundingRect().width,
+                    tempRect.boundingRect().height))
             {
                 isToteFound = true;
                 bestToteRectangle = tempRect;
@@ -160,4 +156,23 @@ bool CToteDetector::filterContoursToFindLargestBlob(
         }
     }
     return isToteFound;
+}
+
+bool CToteDetector::isNearSizeOfATote(float wid, float ht)
+{
+    double area = wid * ht;
+   return (area > 100.0); // && (area < 400));
+}
+
+bool CToteDetector::isNearAspectRatioOfATote(float wid, float ht)
+{
+    if ((wid > (ht * 1.25)) && (wid < (ht * 1.75)))
+    {
+        return true;
+    }
+    if ((ht > (wid * 1.25)) && (ht < (wid * 1.75)))
+    {
+        return true;
+    }
+    return false;
 }
