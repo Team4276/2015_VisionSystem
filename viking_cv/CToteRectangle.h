@@ -35,6 +35,11 @@ class CToteRectangle : public cv::RotatedRect
 {
 public:
     CToteRectangle();
+
+    CToteRectangle(const cv::RotatedRect& rotRect)
+    {
+        *((cv::RotatedRect*)this) = rotRect;
+    }
     virtual ~CToteRectangle();
 
     void init();

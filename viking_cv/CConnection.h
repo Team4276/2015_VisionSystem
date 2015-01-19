@@ -88,6 +88,6 @@ public:
 class CTextConnection : public CConnection
 {
 public:
-    
+
     CLedStrip m_ledStrip;
 };

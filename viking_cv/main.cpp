@@ -55,8 +55,7 @@ CFrameGrinder frameGrinder;
 // Global shutdown flag is set when user typed Ctrl-C
 extern bool g_isShutdown;
 
-int main(int, char**)
-{
+int main(int, char**) {
     CVideoFrame* pFrame = NULL;
 
     frameGrinder.init();
@@ -65,8 +64,7 @@ int main(int, char**)
     cv::VideoCapture camera;
 #endif
 
-    while (!g_isShutdown)
-    {
+    while (!g_isShutdown) {
 
 #ifndef TEST_USE_JPEGS_NOT_CAMERA
         //open the video stream and make sure it's opened
@@ -74,8 +72,7 @@ int main(int, char**)
         {
             dbgMsg_d1("Error opening video stream or file, err = %d\n", errno);
             exit(0);
-        }
-        else
+        } else
 #endif
         {
 #ifdef TEST_USE_JPEGS_NOT_CAMERA
@@ -87,8 +84,7 @@ int main(int, char**)
             sPath = sBasePath;
             sPath += "/IMG_0729.JPG";
             cv::Mat frame2 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
-            if (frame2.empty())
-            {
+            if (frame2.empty()) {
                 dbgMsg_s("Failed to read image data from a file\n");
             }
             int toggle = 0;
@@ -104,33 +100,25 @@ int main(int, char**)
             unsigned int fps = 10;
             frameGrinder.initVideo(fps, height, width, codec);
 #endif
-            while (!g_isShutdown)
-            {
+            while (!g_isShutdown) {
 #ifdef TEST_USE_JPEGS_NOT_CAMERA
                 usleep(10 * 1000);
 #endif
-                if (frameGrinder.safeGetFreeFrame(&pFrame))
-                {
+                if (frameGrinder.safeGetFreeFrame(&pFrame)) {
 #ifdef TEST_USE_JPEGS_NOT_CAMERA
-                    if (toggle == 0)
-                    {
+                    if (toggle == 0) {
                         toggle = 1;
                         pFrame->m_frame = frame1.clone();
-                    }
-                    else
-                    {
+                    } else {
                         toggle = 0;
                         pFrame->m_frame = frame2.clone();
                     }
 #else
                     camera >> pFrame->m_frame;
 #endif
-                    if (!pFrame->m_frame.empty())
-                    {
+                    if (!pFrame->m_frame.empty()) {
                         frameGrinder.safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_WAIT_FOR_BLOB_DETECT);
-                    }
-                    else
-                    {
+                    } else {
                         dbgMsg_s("Frame is empty\n");
                         frameGrinder.safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_FREE);
                     }

@@ -54,7 +54,7 @@ void CMessageFromClient::initFromText(const std::string& messageFromClientText, 
 {
     m_isValid = false;
     int iTemp = atoi(messageFromClientText.c_str());
-    if ( (iTemp >= lowLimit) && (iTemp <= highLimit) )
+    if ((iTemp >= lowLimit) && (iTemp <= highLimit))
     {
         m_isValid = true;
         m_commandFromClient = iTemp;

@@ -312,13 +312,8 @@ double CTestMonitor::getDeltaTimeMilliseconds(struct timespec timeStart, struct 
 
 void CTestMonitor::monitorQueueTimesBeforeReturnToFreeQueue(CVideoFrame* pFrame, CFrameGrinder* pFrameGrinder)
 {
-#ifdef DISPLAY_CALIBRATION_INFO
-    return;
-#endif
-
     std::string sLine;
     static struct timespec timeAtStartOfInterval = {0};
-    std::string sMsg;
     unsigned int i = 0;
     double timeIntervalSeconds = 0.0;
     getTicks(&pFrame->m_timeAddedToQueue[(int) CVideoFrame::FRAME_QUEUE_FREE]);
@@ -495,4 +490,3 @@ std::string CTestMonitor::displayQueueTimes(double timeIntervalSeconds, CFrameGr
 
     return sRet;
 }
-

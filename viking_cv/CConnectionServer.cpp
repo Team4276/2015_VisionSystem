@@ -137,7 +137,7 @@ void* listener_thread(void* pVoid)
                 bytesRead = pCtx->readClient(rcvBuffer, 1024);
                 if (bytesRead > 0)
                 {
-                    messageFromClient.initFromText(rcvBuffer, 1, (int)CLedStrip::NUMBER_OF_LED_STRIP_MODES);
+                    messageFromClient.initFromText(rcvBuffer, 1, (int) CLedStrip::NUMBER_OF_LED_STRIP_MODES);
                     if (!messageFromClient.m_commandFromClient)
                     {
                         sMsg = "listener_thread received an unrecognized command = \"";

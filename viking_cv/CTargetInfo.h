@@ -47,7 +47,7 @@ public:
     }
     void updateTargetInfo(
             int timeSinceLastCameraFrameMilliseconds,
-            int timeLatencyThisCameraFrameMilliseconds, 
+            int timeLatencyThisCameraFrameMilliseconds,
             bool isGrayToteFound,
             float angleFromStraightAheadToTote,
             float offsetFromCenterlineToToteCenter);

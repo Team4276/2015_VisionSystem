@@ -73,7 +73,7 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
     {
         static struct timespec timeLastCameraFrame = {0};
         static struct timespec timeNow = {0};
-        cv::Mat img_hsv, gray_blob, dstA, dstB;
+        cv::Mat img_hsv, gray_blob;
         static int iCount = 0;
 
         int timeSinceLastCameraFrameMilliseconds = (int) CTestMonitor::getDeltaTimeMilliseconds(
@@ -89,13 +89,12 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
 
         // Filter out all but Gray hue
         cv::inRange(img_hsv, cv::Scalar(10, 32, 96), cv::Scalar(30, 128, 160), gray_blob);
-            
+
         iCount++;
         if ((iCount % 17) == 0)
         {
             pFrameGrinder->m_testMonitor.saveFrameToJpeg(gray_blob);
         }
-
 
         //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
         std::vector<std::vector<cv::Point> > grayContours;
@@ -109,21 +108,6 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
         isGrayToteFound = filterContoursToFindLargestBlob(grayContours, bestToteRectangleGray, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
 
         isGrayToteFound = true;
-#ifdef DISPLAY_CALIBRATION_INFO
-        printf("viking_cv version %d.%d.%d", VERSION_YEAR, VERSION_INTERFACE, VERSION_BUILD);
-        if (isGrayToteFound)
-        {
-            printf("   NearFar_X: %d    LeftRight_Y: %d    Radius  %02f\r",
-                    (int) bestToteRectangleGray.m_ptCenter.x,
-                    (int) bestToteRectangleGray.m_ptCenter.y,
-                    bestToteRectangleGray.m_radius);
-        }
-        else
-        {
-            printf("   Gray rectangle *NOT* found\r");
-        }
-#endif
-
 #else
         isGrayToteFound = filterContoursToFindToteBySize(grayContours, bestToteRectangleGray, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
 #endif
@@ -134,7 +118,7 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
                 timeNow);
 
         pFrame->m_targetInfo.updateTargetInfo(
-                timeSinceLastCameraFrameMilliseconds, timeLatencyThisCameraFrameMilliseconds, 
+                timeSinceLastCameraFrameMilliseconds, timeLatencyThisCameraFrameMilliseconds,
                 isGrayToteFound, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
 
         pFrame->updateAnnotationInfo(bestToteRectangleGray);
@@ -158,11 +142,8 @@ bool CToteDetector::filterContoursToFindLargestBlob(
     distanceToToteFeet = -1.0;
 
     unsigned int i = 0;
-    CToteRectangle tempToteRectangle;
-    double aspectRatio, diff, area, predict;
-    cv::RotatedRect tempRect, vertRect, horizRect;
-    std::vector<CToteRectangle> listPossibleToteRectangle;
-    std::vector<cv::Point> contours_poly;
+    double area = 0.0;
+    cv::RotatedRect tempRect;
     for (i = 0; i < listContours.size(); i++)
     {
         tempRect = cv::minAreaRect(cv::Mat(listContours[i]));
@@ -170,19 +151,13 @@ bool CToteDetector::filterContoursToFindLargestBlob(
         if ((area > 100.0) && (area < 400))
         {
             // Test to see if width and height look like vertical (static) target
-            if (  (tempRect.boundingRect().width > (tempRect.boundingRect().height * 2.5))
-                || (tempRect.boundingRect().height > (tempRect.boundingRect().width * 2.5))  )
+            if ((tempRect.boundingRect().width > (tempRect.boundingRect().height * 2.5))
+                    || (tempRect.boundingRect().height > (tempRect.boundingRect().width * 2.5)))
             {
                 isToteFound = true;
-                bestToteRectangle.angle = tempRect.angle;
-                bestToteRectangle.center = tempRect.center;
+                bestToteRectangle = tempRect;
             }
         }
-    }
-    if (isToteFound)
-    {
-        //angleToToteDegrees = m_lookupTable[(int) bestToteRectangle.m_ptCenter.x][(int) bestToteRectangle.m_ptCenter.y].angleToToteDegrees;
-        //distanceToToteFeet = m_lookupTable[(int) bestToteRectangle.m_ptCenter.x][(int) bestToteRectangle.m_ptCenter.y].distanceToToteFeet;
     }
     return isToteFound;
 }

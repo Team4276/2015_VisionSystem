@@ -109,9 +109,8 @@ void CFrameGrinder::init()
 
 void CFrameGrinder::initVideo(int framesPerSec, unsigned int height, unsigned int width, int codec)
 {
-    m_testMonitor.initVideo(framesPerSec, height, width, codec);    
+    m_testMonitor.initVideo(framesPerSec, height, width, codec);
 }
-
 
 bool CFrameGrinder::safeGetFreeFrame(CVideoFrame** ppFrame)
 {
@@ -163,7 +162,7 @@ bool CFrameGrinder::safeGetFreeFrame(CVideoFrame** ppFrame)
         return false;
     }
     (*ppFrame)->init();
-    CTestMonitor::getTicks(&((*ppFrame)->m_timeRemovedFromQueue[(int) CVideoFrame::FRAME_QUEUE_FREE]));  // init() clears the time stamp so have to get time again)
+    CTestMonitor::getTicks(&((*ppFrame)->m_timeRemovedFromQueue[(int) CVideoFrame::FRAME_QUEUE_FREE])); // init() clears the time stamp so have to get time again)
     pthread_mutex_unlock(&m_mutexQueue);
     return true;
 }

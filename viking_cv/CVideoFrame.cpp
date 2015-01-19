@@ -63,12 +63,16 @@ void CVideoFrame::updateAnnotationInfo(const CToteRectangle& ToteRectangleGray)
 
 void CVideoFrame::annotate()
 {
-    const cv::Scalar colorGreen = cv::Scalar(0, 255, 0);
     const cv::Scalar colorOrange = cv::Scalar(0, 128, 255);
 
     if (m_targetInfo.isGrayToteFound())
     {
-        cv::circle(m_frame, m_toteRectangleGray.center, (int)m_toteRectangleGray.angle, colorOrange, 3, 8, 0);
+        cv::Point2f rect_points[4];
+        m_toteRectangleGray.points(rect_points);
+        for (int j = 0; j < 4; j++)
+        {
+            cv::line(m_frame, rect_points[j], rect_points[(j + 1) % 4], colorOrange, 3, 8);
+        }
     }
 }
 
@@ -83,4 +87,3 @@ void CVideoFrame::compress()
         dbgMsg_s("Failed to encode frame to JPG format\n");
     }
 }
-
