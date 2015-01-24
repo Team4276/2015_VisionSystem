@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="89">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>plugins/input_uvc/viking_cv/CConnection.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CConnectionServer.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CFrameGrinder.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CGpioLed.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CLedStrip.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CMessageFromClient.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CTargetInfo.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CTestMonitor.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CToteDetector.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CToteRectangle.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CVideoFrame.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CVideoFrameQueue.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/dbgMsg.h</itemPath>
+      <itemPath>plugins/input_uvc/dynctrl.h</itemPath>
+      <itemPath>plugins/output_http/httpd.h</itemPath>
+      <itemPath>plugins/input_uvc/huffman.h</itemPath>
+      <itemPath>plugins/input.h</itemPath>
+      <itemPath>plugins/input_uvc/jpeg_utils.h</itemPath>
+      <itemPath>mjpg_streamer.h</itemPath>
+      <itemPath>plugins/output.h</itemPath>
+      <itemPath>utils.h</itemPath>
+      <itemPath>plugins/input_uvc/uvc_compat.h</itemPath>
+      <itemPath>plugins/input_uvc/uvcvideo.h</itemPath>
+      <itemPath>plugins/input_uvc/v4l2uvc.h</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/viking_cv_version.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>plugins/input_uvc/viking_cv/CConnection.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CConnectionServer.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CFrameGrinder.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CGpioLed.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CLedStrip.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CMessageFromClient.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CTargetInfo.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CTestMonitor.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CToteDetector.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CToteRectangle.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CVideoFrame.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/CVideoFrameQueue.cpp</itemPath>
+      <itemPath>plugins/input_uvc/viking_cv/dbgMsg.cpp</itemPath>
+      <itemPath>plugins/input_uvc/dynctrl.cpp</itemPath>
+      <itemPath>plugins/output_http/httpd.c</itemPath>
+      <itemPath>plugins/input_uvc/input_uvc.cpp</itemPath>
+      <itemPath>plugins/input_uvc/jpeg_utils.cpp</itemPath>
+      <itemPath>mjpg_streamer.cpp</itemPath>
+      <itemPath>plugins/output_http/output_http.c</itemPath>
+      <itemPath>utils.cpp</itemPath>
+      <itemPath>plugins/input_uvc/v4l2uvc.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>DynamicLinking</linkerLibStdlibItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+        <requiredProjects>
+          <makeArtifact PL="plugins/input_uvc"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="true"
+                        WD="plugins/input_uvc"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/input_uvc.${CND_DLIB_EXT}">
+          </makeArtifact>
+          <makeArtifact PL="plugins/output_http"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="true"
+                        WD="plugins/output_http"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/output_http.${CND_DLIB_EXT}">
+          </makeArtifact>
+        </requiredProjects>
+      </compileType>
+      <item path="mjpg_streamer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mjpg_streamer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="plugins/input_uvc/v4l2uvc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>DynamicLinking</linkerLibStdlibItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="mjpg_streamer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mjpg_streamer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="plugins/input_uvc/v4l2uvc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
