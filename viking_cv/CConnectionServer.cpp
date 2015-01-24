@@ -137,7 +137,7 @@ void* listener_thread(void* pVoid)
                 bytesRead = pCtx->readClient(rcvBuffer, 1024);
                 if (bytesRead > 0)
                 {
-                    messageFromClient.initFromText(rcvBuffer, 1, (int) CLedStrip::NUMBER_OF_LED_STRIP_MODES);
+                    messageFromClient.initFromText(rcvBuffer, 1, (int)CLedStrip::NUMBER_OF_LED_STRIP_MODES);
                     if (!messageFromClient.m_commandFromClient)
                     {
                         sMsg = "listener_thread received an unrecognized command = \"";
@@ -204,8 +204,9 @@ void* browser_server_thread(void* pVoid)
             iCount++;
             if (iCount % 16 == 0)
             {
-                pFrame->annotate();
-               //cv::imshow("pFrame", pFrame->m_frame);
+                // Note: Annotation only works on the laptop, not the BBB.  
+                // pFrame->annotate();
+                //cv::imshow("pFrame", pFrame->m_frame);
                 //cv::waitKey(0);
                 pFrameGrinder->m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
 

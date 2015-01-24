@@ -34,7 +34,6 @@
 class CLedStrip
 {
 public:
-
     typedef enum
     {
         LED_STRIP_MODE_UNKNOWN,
@@ -49,11 +48,11 @@ public:
     CLedStrip();
     CLedStrip(const CLedStrip& orig);
     virtual ~CLedStrip();
-
+    
     bool isValid() const;
     std::string displayText() const;
     void setMode(CLedStrip::LED_STRIP_MODE mode);
-
+    
 private:
     LED_STRIP_MODE m_ledStripState;
 };

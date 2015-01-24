@@ -35,42 +35,52 @@
 static pthread_mutex_t static_dbgMutex;
 static pthread_mutexattr_t static_dbgMutexattr;
 
-void dbgInit() {
+void dbgInit()
+{
     pthread_mutex_init(&static_dbgMutex, &static_dbgMutexattr);
     FILE* fp = fopen("/home/ubuntu/dbg.log", "w");
-    if (fp != NULL) {
+    if (fp != NULL)
+    {
         fclose(fp);
     }
 }
 
-void dbgMsg(const char* msg) {
+void dbgMsg(const char* msg)
+{
     pthread_mutex_lock(&static_dbgMutex);
-    try {
+    try
+    {
         FILE* fp = fopen("/home/ubuntu/dbg.log", "a");
-        if (fp != NULL) {
+        if (fp != NULL)
+        {
             int bytesWritten = fwrite(msg, sizeof (char), strlen(msg), fp);
             bytesWritten = fwrite("\n", sizeof (char), 1, fp);
             fflush(NULL);
             fclose(fp);
         }
-    } catch (...) {
+    }
+    catch (...)
+    {
     }
     pthread_mutex_unlock(&static_dbgMutex);
 }
 
-void dbgMsg_s(const std::string& str) {
+void dbgMsg_s(const std::string& str)
+{
     printf("%s", str.c_str());
     dbgMsg(str.c_str());
 }
 
-void dbgMsg_d1(const char* fmt, unsigned int val_1) {
+void dbgMsg_d1(const char* fmt, unsigned int val_1)
+{
     char buf[128];
     sprintf(buf, fmt, val_1);
     printf("%s", buf);
     dbgMsg(buf);
 }
 
-void dbgMsg_f1(const char* fmt, float val_1) {
+void dbgMsg_f1(const char* fmt, float val_1)
+{
     char buf[128];
     sprintf(buf, fmt, val_1);
     printf("%s", buf);

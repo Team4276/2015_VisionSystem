@@ -64,6 +64,7 @@ CToteDetector::~CToteDetector()
 
 void CToteDetector::init()
 {
+    m_tolerancePercentForRadius = 0.20;
 }
 
 void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrinder)
@@ -72,7 +73,7 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
     {
         static struct timespec timeLastCameraFrame = {0};
         static struct timespec timeNow = {0};
-        cv::Mat img_hsv, gray_blob;
+        cv::Mat img_hsv, gray_blob, dstA, dstB;
         static int iCount = 0;
 
         int timeSinceLastCameraFrameMilliseconds = (int) CTestMonitor::getDeltaTimeMilliseconds(
@@ -88,12 +89,13 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
 
         // Filter out all but Gray hue
         cv::inRange(img_hsv, cv::Scalar(10, 32, 96), cv::Scalar(30, 128, 160), gray_blob);
-
+            
         iCount++;
         if ((iCount % 17) == 0)
         {
             pFrameGrinder->m_testMonitor.saveFrameToJpeg(gray_blob);
         }
+
 
         //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
         std::vector<std::vector<cv::Point> > grayContours;
@@ -105,6 +107,23 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
         bool isGrayToteFound = false;
 #ifdef DETECT_LARGEST_BLOB_NO_FILTER_BASED_ON_SIZE
         isGrayToteFound = filterContoursToFindLargestBlob(grayContours, bestToteRectangleGray, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
+
+        isGrayToteFound = true;
+#ifdef DISPLAY_CALIBRATION_INFO
+        printf("viking_cv version %d.%d.%d", VERSION_YEAR, VERSION_INTERFACE, VERSION_BUILD);
+        if (isGrayToteFound)
+        {
+            printf("   NearFar_X: %d    LeftRight_Y: %d    Radius  %02f\r",
+                    (int) bestToteRectangleGray.m_ptCenter.x,
+                    (int) bestToteRectangleGray.m_ptCenter.y,
+                    bestToteRectangleGray.m_radius);
+        }
+        else
+        {
+            printf("   Gray rectangle *NOT* found\r");
+        }
+#endif
+
 #else
         isGrayToteFound = filterContoursToFindToteBySize(grayContours, bestToteRectangleGray, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
 #endif
@@ -115,7 +134,7 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
                 timeNow);
 
         pFrame->m_targetInfo.updateTargetInfo(
-                timeSinceLastCameraFrameMilliseconds, timeLatencyThisCameraFrameMilliseconds,
+                timeSinceLastCameraFrameMilliseconds, timeLatencyThisCameraFrameMilliseconds, 
                 isGrayToteFound, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
 
         pFrame->updateAnnotationInfo(bestToteRectangleGray);
@@ -139,40 +158,31 @@ bool CToteDetector::filterContoursToFindLargestBlob(
     distanceToToteFeet = -1.0;
 
     unsigned int i = 0;
-    double area = 0.0;
-    cv::RotatedRect tempRect;
+    CToteRectangle tempToteRectangle;
+    double aspectRatio, diff, area, predict;
+    cv::RotatedRect tempRect, vertRect, horizRect;
+    std::vector<CToteRectangle> listPossibleToteRectangle;
+    std::vector<cv::Point> contours_poly;
     for (i = 0; i < listContours.size(); i++)
     {
         tempRect = cv::minAreaRect(cv::Mat(listContours[i]));
-        if (isNearSizeOfATote(tempRect.boundingRect().width,
-                tempRect.boundingRect().height))
+        area = tempRect.boundingRect().width * tempRect.boundingRect().height;
+        if ((area > 100.0) && (area < 400))
         {
-            if (isNearAspectRatioOfATote(tempRect.boundingRect().width,
-                    tempRect.boundingRect().height))
+            // Test to see if width and height look like vertical (static) target
+            if (  (tempRect.boundingRect().width > (tempRect.boundingRect().height * 2.5))
+                || (tempRect.boundingRect().height > (tempRect.boundingRect().width * 2.5))  )
             {
                 isToteFound = true;
-                bestToteRectangle = tempRect;
+                bestToteRectangle.angle = tempRect.angle;
+                bestToteRectangle.center = tempRect.center;
             }
         }
     }
+    if (isToteFound)
+    {
+        //angleToToteDegrees = m_lookupTable[(int) bestToteRectangle.m_ptCenter.x][(int) bestToteRectangle.m_ptCenter.y].angleToToteDegrees;
+        //distanceToToteFeet = m_lookupTable[(int) bestToteRectangle.m_ptCenter.x][(int) bestToteRectangle.m_ptCenter.y].distanceToToteFeet;
+    }
     return isToteFound;
-}
-
-bool CToteDetector::isNearSizeOfATote(float wid, float ht)
-{
-    double area = wid * ht;
-   return (area > 100.0); // && (area < 400));
-}
-
-bool CToteDetector::isNearAspectRatioOfATote(float wid, float ht)
-{
-    if ((wid > (ht * 1.25)) && (wid < (ht * 1.75)))
-    {
-        return true;
-    }
-    if ((ht > (wid * 1.25)) && (ht < (wid * 1.75)))
-    {
-        return true;
-    }
-    return false;
 }

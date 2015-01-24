@@ -29,8 +29,7 @@
 
 /*******************************************************************************************/
 
-#ifndef CVIDEOFRAME_H
-#define	CVIDEOFRAME_H
+
 
 class CVideoFrame
 {
@@ -66,5 +65,3 @@ public:
     std::vector<uchar> m_outbuf;
     std::vector<int> m_params;
 };
-
-#endif //CVIDEOFRAME_H
