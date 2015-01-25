@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
    input[1] = 0;
    global.incnt = 1;
    
-   output[0] = (char*)"output_http.so --port 5800 -w ./www";
+   output[0] = (char*)"output_http.so --port 5800 -w /usr/local/www";
    output[1] = 0;
    global.outcnt = 1;
 
