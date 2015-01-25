@@ -90,23 +90,23 @@
         <requiredProjects>
           <makeArtifact PL="plugins/input_uvc"
                         CT="2"
-                        CN="Debug"
-                        AC="true"
+                        CN="Release"
+                        AC="false"
                         BL="true"
                         WD="plugins/input_uvc"
-                        BC="${MAKE}  -f Makefile CONF=Debug"
-                        CC="${MAKE}  -f Makefile CONF=Debug clean"
-                        OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/input_uvc.${CND_DLIB_EXT}">
+                        BC="${MAKE}  -f Makefile CONF=Release"
+                        CC="${MAKE}  -f Makefile CONF=Release clean"
+                        OP="../../dist/${CND_CONF}/${CND_PLATFORM}/input_uvc.${CND_DLIB_EXT}">
           </makeArtifact>
           <makeArtifact PL="plugins/output_http"
                         CT="2"
-                        CN="Debug"
-                        AC="true"
+                        CN="Release"
+                        AC="false"
                         BL="true"
                         WD="plugins/output_http"
-                        BC="${MAKE}  -f Makefile CONF=Debug"
-                        CC="${MAKE}  -f Makefile CONF=Debug clean"
-                        OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/output_http.${CND_DLIB_EXT}">
+                        BC="${MAKE}  -f Makefile CONF=Release"
+                        CC="${MAKE}  -f Makefile CONF=Release clean"
+                        OP="../../dist/${CND_CONF}/${CND_PLATFORM}/output_http.${CND_DLIB_EXT}">
           </makeArtifact>
         </requiredProjects>
       </compileType>
@@ -145,6 +145,28 @@
             <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
           </linkerLibItems>
         </linkerTool>
+        <requiredProjects>
+          <makeArtifact PL="plugins/input_uvc"
+                        CT="2"
+                        CN="Release"
+                        AC="true"
+                        BL="true"
+                        WD="plugins/input_uvc"
+                        BC="${MAKE}  -f Makefile CONF=Release"
+                        CC="${MAKE}  -f Makefile CONF=Release clean"
+                        OP="../../dist/${CND_CONF}/${CND_PLATFORM}/input_uvc.${CND_DLIB_EXT}">
+          </makeArtifact>
+          <makeArtifact PL="plugins/output_http"
+                        CT="2"
+                        CN="Release"
+                        AC="true"
+                        BL="true"
+                        WD="plugins/output_http"
+                        BC="${MAKE}  -f Makefile CONF=Release"
+                        CC="${MAKE}  -f Makefile CONF=Release clean"
+                        OP="../../dist/${CND_CONF}/${CND_PLATFORM}/output_http.${CND_DLIB_EXT}">
+          </makeArtifact>
+        </requiredProjects>
       </compileType>
       <item path="mjpg_streamer.cpp" ex="false" tool="1" flavor2="0">
       </item>

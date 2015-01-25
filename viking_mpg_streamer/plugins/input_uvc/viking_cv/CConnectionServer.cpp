@@ -240,7 +240,7 @@ void CConnectionServer::init(CFrameGrinder* pFrameGrinder)
 
     // Port 1180 is legal to use per FRC rules. The port is bidirectional but usually used to relay camera 
     // video from the cRIO to the driver station
-    static_textConnection.init(1180, (char*) "text");
+    static_textConnection.init(5801, (char*) "text");
 
     m_old_pipeHandler = signal(SIGPIPE, sigPipeHandler);
     if (m_old_pipeHandler == SIG_ERR)
