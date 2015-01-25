@@ -440,6 +440,8 @@ void *cam_thread(void *arg)
             continue;
         }
         
+ #ifndef NO_CV_JUST_STREAM_THE_CAMERA
+       
         if (frameGrinder.safeGetFreeFrame(&pFrame))
         {
             RGB2IplImage(img, pcontext->videoIn->tmpbuffer, width, height); 
@@ -459,6 +461,8 @@ void *cam_thread(void *arg)
              frameGrinder.m_testMonitor.m_nTasksDone[CTestMonitor::TASK_DONE_CAMERA]++;
         }
 
+#else // #ifndef NO_CV_JUST_STREAM_THE_CAMERA
+
         /* copy JPG picture to global buffer */
         pthread_mutex_lock(&pglobal->in[pcontext->id].db);
 
@@ -468,7 +472,6 @@ void *cam_thread(void *arg)
          * Getting JPEGs straight from the webcam, is one of the major advantages of
          * Linux-UVC compatible devices.
          */
-        /*
         if(pcontext->videoIn->formatIn == V4L2_PIX_FMT_YUYV) {
             DBG("compressing frame from input: %d\n", (int)pcontext->id);
             pglobal->in[pcontext->id].size = compress_yuyv_to_jpeg(pcontext->videoIn, pglobal->in[pcontext->id].buf, pcontext->videoIn->framesizeIn, gquality);
@@ -476,15 +479,6 @@ void *cam_thread(void *arg)
             DBG("copying frame from input: %d\n", (int)pcontext->id);
             pglobal->in[pcontext->id].size = memcpy_picture(pglobal->in[pcontext->id].buf, pcontext->videoIn->tmpbuffer, pcontext->videoIn->buf.bytesused);
         }
-*/
-                
-#if 0
-        /* motion detection can be done just by comparing the picture size, but it is not very accurate!! */
-        if((prev_size - global->size)*(prev_size - global->size) > 4 * 1024 * 1024) {
-            DBG("motion detected (delta: %d kB)\n", (prev_size - global->size) / 1024);
-        }
-        prev_size = global->size;
-#endif
 
         /* copy this frame's timestamp to user space */
         pglobal->in[pcontext->id].timestamp = pcontext->videoIn->buf.timestamp;
@@ -493,14 +487,8 @@ void *cam_thread(void *arg)
         pthread_cond_broadcast(&pglobal->in[pcontext->id].db_update);
         pthread_mutex_unlock(&pglobal->in[pcontext->id].db);
 
+#endif  // #ifndef NO_CV_JUST_STREAM_THE_CAMERA
 
-        /* only use usleep if the fps is below 5, otherwise the overhead is too long */
-        if(pcontext->videoIn->fps < 5) {
-            DBG("waiting for next frame for %d us\n", 1000 * 1000 / pcontext->videoIn->fps);
-            usleep(1000 * 1000 / pcontext->videoIn->fps);
-        } else {
-            DBG("waiting for next frame\n");
-        }
     }
 
     DBG("leaving input thread, calling cleanup function now\n");

@@ -333,7 +333,7 @@ int main(int argc, char *argv[])
             closelog();
             exit(EXIT_FAILURE);
         }
-        global.in[i].init = (int (*)(input_parameter *, int id))dlsym(global.in[i].handle, "input_init");
+        global.in[i].init = (int (*)(input_parameter *, int))dlsym(global.in[i].handle, "input_init");
         if(global.in[i].init == NULL) {
             LOG("%s\n", dlerror());
             exit(EXIT_FAILURE);
@@ -349,7 +349,7 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
         /* try to find optional command */
-        global.in[i].cmd = (int (*)(int plugin, unsigned int control_id, unsigned int group, int value))dlsym(global.in[i].handle, "input_cmd");
+        global.in[i].cmd = (int (*)(int, unsigned int, unsigned int, int))dlsym(global.in[i].handle, "input_cmd");
 
         global.in[i].param.parameters = strchr(input[i], ' ');
         split_parameters(global.in[i].param.parameters, &global.in[i].param.argc, global.in[i].param.argv);
@@ -376,7 +376,7 @@ int main(int argc, char *argv[])
             closelog();
             exit(EXIT_FAILURE);
         }
-        global.out[i].init = (int (*)(output_parameter *param, int id))dlsym(global.out[i].handle, "output_init");
+        global.out[i].init = (int (*)(output_parameter *, int))dlsym(global.out[i].handle, "output_init");
         if(global.out[i].init == NULL) {
             LOG("%s\n", dlerror());
             exit(EXIT_FAILURE);
@@ -393,7 +393,7 @@ int main(int argc, char *argv[])
         }
 
         /* try to find optional command */
-        global.out[i].cmd = (int (*)(int plugin, unsigned int control_id, unsigned int group, int value))dlsym(global.out[i].handle, "output_cmd");
+        global.out[i].cmd = (int (*)(int, unsigned int, unsigned int, int ))dlsym(global.out[i].handle, "output_cmd");
 
         global.out[i].param.parameters = strchr(output[i], ' ');
         split_parameters(global.out[i].param.parameters, &global.out[i].param.argc, global.out[i].param.argv);
