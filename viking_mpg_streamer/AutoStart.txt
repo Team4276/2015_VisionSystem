@@ -1,0 +1,13 @@
+To make the video server start automatically on boot , I put a little script inside /etc/init.d/start_viking_mpg_streamer
+
+Making the script sleep for 5 seconds was crucial towards getting it to start correctly on boot.
+
+#!/bin/bash
+sleep 5s
+/usr/bin/viking_mpg_streamer
+
+After the script is made:
+
+$ chmod 755 /etc/init.d/start_viking_mpg_streamer
+
+$ update-rc.d start_viking_mpg_streamer defaults
