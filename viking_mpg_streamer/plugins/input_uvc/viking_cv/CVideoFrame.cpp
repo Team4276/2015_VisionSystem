@@ -68,6 +68,10 @@ void CVideoFrame::annotate()
     //const cv::Scalar colorGreen = cv::Scalar(0, 255, 0);
     const cv::Scalar colorOrange = cv::Scalar(0, 128, 255);
 
+    cv::Point2f pt1(0.0,0.0);
+    cv::Point2f pt2(100.0,100.0);
+    cv::line(m_frame, pt1, pt2, colorOrange, 8);
+    
     if (m_targetInfo.isGrayToteFound())
     {
         cv::circle(m_frame, m_toteRectangleGray.m_ptCenter, (int)m_toteRectangleGray.m_radius, colorOrange, 3, 8, 0);

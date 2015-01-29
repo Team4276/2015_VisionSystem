@@ -89,7 +89,7 @@ static const struct {
 };
 
 /* private functions and variables to this plugin */
-static globals *pglobal;
+globals *pglobal;
 static int gquality = 80;
 static unsigned int minimum_size = 0;
 static int dynctrls = 1;
@@ -440,30 +440,9 @@ void *cam_thread(void *arg)
             continue;
         }
         
- #ifndef NO_CV_JUST_STREAM_THE_CAMERA
+ #ifdef NO_CV_JUST_STREAM_THE_CAMERA
        
-        if (frameGrinder.safeGetFreeFrame(&pFrame))
-        {
-            RGB2IplImage(img, pcontext->videoIn->tmpbuffer, width, height); 
-            pFrame->m_frame = img;
-
-            frameGrinder.m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
- 
-            if (!pFrame->m_frame.empty())
-            {
-                frameGrinder.safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_WAIT_FOR_BLOB_DETECT);
-            }
-            else
-            {
-                dbgMsg_s("Frame is empty\n");
-                frameGrinder.safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_FREE);
-            }
-             frameGrinder.m_testMonitor.m_nTasksDone[CTestMonitor::TASK_DONE_CAMERA]++;
-        }
-
-#else // #ifndef NO_CV_JUST_STREAM_THE_CAMERA
-
-        /* copy JPG picture to global buffer */
+          /* copy JPG picture to global buffer */
         pthread_mutex_lock(&pglobal->in[pcontext->id].db);
 
         /*
@@ -486,6 +465,27 @@ void *cam_thread(void *arg)
         /* signal fresh_frame */
         pthread_cond_broadcast(&pglobal->in[pcontext->id].db_update);
         pthread_mutex_unlock(&pglobal->in[pcontext->id].db);
+
+
+#else // #ifndef NO_CV_JUST_STREAM_THE_CAMERA
+        
+      if (frameGrinder.safeGetFreeFrame(&pFrame))
+        {
+            std::vector<uchar> vectordata(pcontext->videoIn->tmpbuffer, pcontext->videoIn->tmpbuffer+(height*width));
+            cv::Mat data_mat(vectordata, false);
+            cv::Mat image(cv::imdecode(data_mat,1)); //put 0 if you want greyscale
+            pFrame->m_frame = image;            
+            if (!pFrame->m_frame.empty())
+            {
+                frameGrinder.safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_WAIT_FOR_BLOB_DETECT);
+            }
+            else
+            {
+                dbgMsg_s("Frame is empty\n");
+                frameGrinder.safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_FREE);
+            }
+             frameGrinder.m_testMonitor.m_nTasksDone[CTestMonitor::TASK_DONE_CAMERA]++;
+        }
 
 #endif  // #ifndef NO_CV_JUST_STREAM_THE_CAMERA
 

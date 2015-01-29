@@ -40,6 +40,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/features2d/features2d.hpp>
 
+#include "../v4l2uvc.h" // this header will includes the ../../mjpg_streamer.h
+
 #include "CLedStrip.h"
 #include "CConnection.h"
 #include "CToteRectangle.h"
@@ -56,6 +58,9 @@
 
 // Global shutdown flag is set when user typed Ctrl-C
 bool g_isShutdown = false;
+
+extern globals *pglobal;
+extern context cams[MAX_INPUT_PLUGINS];
 
 static CBrowserConnection static_browserConnection;
 static CTextConnection static_textConnection;
@@ -170,6 +175,7 @@ void* text_server_thread(void* pVoid)
     {
         if (pFrameGrinder->safeBlockingRemoveHead(&pFrame, CVideoFrame::FRAME_QUEUE_WAIT_FOR_TEXT_CLIENT))
         {
+            /*
             if (pFrameGrinder->m_connectionServer.isTextConnectionReadyToReceive())
             {
                 pFrame->m_targetInfo.initFormattedTextFromTargetInfo();
@@ -181,6 +187,9 @@ void* text_server_thread(void* pVoid)
                 fflush(NULL);
                 pFrameGrinder->m_testMonitor.m_nTasksDone[CTestMonitor::TASK_DONE_TEXT]++;
             }
+             */
+            
+            
             pFrameGrinder->safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_WAIT_FOR_BROWSER_CLIENT);
         }
     }
@@ -188,45 +197,42 @@ void* text_server_thread(void* pVoid)
 
 void* browser_server_thread(void* pVoid)
 {
+    context* pcontext = &cams[0];  // All code not relating to our camera in and http out has been removed
     static int iCount = 0;
     unsigned int i = 0;
     CFrameGrinder* pFrameGrinder = (CFrameGrinder*) pVoid;
     CVideoFrame* pFrame = 0;
     char head[1024];
+ 
+    std::vector<unsigned char> buf;
+    std::vector<int> qualityType;
+    qualityType.push_back(CV_IMWRITE_JPEG_QUALITY);
+    qualityType.push_back(50);
+
     while (!g_isShutdown)
     {
         if (pFrameGrinder->safeBlockingRemoveHead(&pFrame, CVideoFrame::FRAME_QUEUE_WAIT_FOR_BROWSER_CLIENT))
-        {
-            pFrameGrinder->m_testMonitor.saveVideoFrame(pFrame->m_frame);
+        {            
+           /* copy JPG picture to global buffer */
+            pthread_mutex_lock(&pglobal->in[pcontext->id].db);
+            
+            pFrame->annotate();
+             
+            cv::imencode(".jpg", pFrame->m_frame, buf, qualityType);  
 
-            // Displaying every from uses up processor cycles so blob detect is starved and frames get dropped
-            // Displaying every 4th looks smoother because they are evenly spaced, and only a few frames get dropped
-            iCount++;
-            if (iCount % 16 == 0)
-            {
-                // Note: Annotation only works on the laptop, not the BBB.  
-                // pFrame->annotate();
-                //cv::imshow("pFrame", pFrame->m_frame);
-                //cv::waitKey(0);
-                pFrameGrinder->m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
+            DBG("copying frame from input: %d\n", (int)pcontext->id);
+            pglobal->in[pcontext->id].size = memcpy_picture(pglobal->in[pcontext->id].buf, buf.data(), buf.size());
 
-                if (pFrameGrinder->m_connectionServer.isBrowserConnectionReadyToReceive())
-                {
-                    try
-                    {
-                        sprintf(head, "\r\n--informs\r\nContent-Type: image/jpeg\r\nContent-Length: %d\r\n\r\n", pFrame->m_outbuf.size());
-                        static_browserConnection.writeClient(head, strlen(head));
-                        fflush(NULL);
-                        static_browserConnection.writeClient((char*) pFrame->m_outbuf.data(), pFrame->m_outbuf.size());
-                        fflush(NULL);
-                    }
-                    catch (...)
-                    {
-                    }
 
-                    pFrameGrinder->m_testMonitor.m_nTasksDone[CTestMonitor::TASK_DONE_BROWSER]++;
-                }
-            }
+            /* copy this frame's timestamp to user space */
+            pglobal->in[pcontext->id].timestamp = pcontext->videoIn->buf.timestamp;
+
+            /* signal fresh_frame */
+            pthread_cond_broadcast(&pglobal->in[pcontext->id].db_update);
+            pthread_mutex_unlock(&pglobal->in[pcontext->id].db);
+
+            pFrameGrinder->m_testMonitor.m_nTasksDone[CTestMonitor::TASK_DONE_BROWSER]++;
+
             pFrameGrinder->m_testMonitor.monitorQueueTimesBeforeReturnToFreeQueue(pFrame, pFrameGrinder);
             pFrameGrinder->safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_FREE);
         }
