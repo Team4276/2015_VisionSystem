@@ -56,25 +56,49 @@ void CVideoFrame::init()
     m_params.clear();
 }
 
-void CVideoFrame::updateAnnotationInfo(
-        const CToteRectangle& toteRectangleBlue,
-        const CToteRectangle& toteRectangleRed)
+void CVideoFrame::updateAnnotationInfo(const CToteRectangle& ToteRectangleGray)
 {
-    m_toteRectangleGray = toteRectangleBlue;
+    m_toteRectangleGray = ToteRectangleGray;
 }
 
 void CVideoFrame::annotate()
 {
-    //const cv::Scalar colorGreen = cv::Scalar(0, 255, 0);
+    const cv::Scalar colorGreen = cv::Scalar(0, 255, 0);
     const cv::Scalar colorOrange = cv::Scalar(0, 128, 255);
 
-    cv::Point2f pt1(0.0,0.0);
-    cv::Point2f pt2(100.0,100.0);
-    cv::line(m_frame, pt1, pt2, colorOrange, 8);
+    const int pixelOffsetFromCenterlineToCamera = +600;  // Positive means the centerline is to the right of the camera
+    const int pixelDistanceFromBottomOfViewToCollectorWheels = 80;
     
+    cv::Point pt1((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, VIEW_PIXEL_Y_HEIGHT);
+    cv::Point pt2((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, VIEW_PIXEL_Y_HEIGHT - (pixelDistanceFromBottomOfViewToCollectorWheels + 20));
+    cv::line(m_frame, pt1, pt2, colorGreen, 3, 4, 0);
+    
+    cv::Point pt3((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera - 20, VIEW_PIXEL_Y_HEIGHT - pixelDistanceFromBottomOfViewToCollectorWheels);
+    cv::Point pt4((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera + 20, VIEW_PIXEL_Y_HEIGHT - pixelDistanceFromBottomOfViewToCollectorWheels);
+    cv::line(m_frame, pt3, pt4, colorGreen, 3, 4, 0);
+        
     if (m_targetInfo.isGrayToteFound())
-    {
-        cv::circle(m_frame, m_toteRectangleGray.m_ptCenter, (int)m_toteRectangleGray.m_radius, colorOrange, 3, 8, 0);
+    {  
+        // Find midpoints of the 4 sides of the rectangle, and draw from those points to the center
+        cv::Point2f pts[4];
+        m_toteRectangleGray.points(pts);
+        cv::Point2f pt5((pts[0].x + pts[1].x)/2,(pts[0].y + pts[1].y)/2 );
+        cv::Point2f pt6((pts[1].x + pts[2].x)/2,(pts[1].y + pts[2].y)/2 );
+        cv::Point2f pt7((pts[2].x + pts[3].x)/2,(pts[2].y + pts[3].y)/2 );
+        cv::Point2f pt8((pts[3].x + pts[0].x)/2,(pts[3].y + pts[0].y)/2 );
+         
+        cv::line(m_frame, pt5, m_toteRectangleGray.center, colorOrange, 3, 4, 0);
+        cv::line(m_frame, pt6, m_toteRectangleGray.center, colorOrange, 3, 4, 0);
+        cv::line(m_frame, pt7, m_toteRectangleGray.center, colorOrange, 3, 4, 0);
+        cv::line(m_frame, pt8, m_toteRectangleGray.center, colorOrange, 3, 4, 0);
+
+        // Draw the rectangle
+        cv::line(m_frame, pts[0], pts[1], colorOrange, 3, 4, 0);
+        cv::line(m_frame, pts[1], pts[2], colorOrange, 3, 4, 0);
+        cv::line(m_frame, pts[2], pts[3], colorOrange, 3, 4, 0);
+        cv::line(m_frame, pts[3], pts[0], colorOrange, 3, 4, 0);
+
+
     }
 }
 

@@ -40,25 +40,27 @@ CToteRectangle::CToteRectangle()
     init();
 }
 
-CToteRectangle::CToteRectangle(const CToteRectangle& orig)
-{
-    m_ptCenter = orig.m_ptCenter;
-    m_radius = orig.m_radius;
-}
-
 CToteRectangle::~CToteRectangle()
 {
 }
 
 void CToteRectangle::init()
 {
-    m_ptCenter = cv::Point2f(0, 0);
-    m_radius = 0.0;
+    center = cv::Point2f(0, 0);
+    angle = 0.0;
+    size = cv::Size2f(0.0, 0.0);
+}
+
+CToteRectangle& CToteRectangle::operator=(const cv::RotatedRect& rect)
+{
+    angle = rect.angle;
+    center = rect.center;
+    size = rect.size;
 }
 
 std::string CToteRectangle::displayText() const
 {
     char buf[128];
-    sprintf(buf, "C(%d, %d) R(%02f)", (int) m_ptCenter.x, (int) m_ptCenter.y, m_radius);
+    sprintf(buf, "C(%d, %d) A(%02f)", (int) center.x, (int) center.y, angle);
     return buf;
 }

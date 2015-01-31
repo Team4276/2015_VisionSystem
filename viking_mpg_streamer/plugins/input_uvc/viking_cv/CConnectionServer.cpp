@@ -217,7 +217,11 @@ void* browser_server_thread(void* pVoid)
             pthread_mutex_lock(&pglobal->in[pcontext->id].db);
             
             pFrame->annotate();
-             
+            iCount++;
+            if((iCount % 17) == 0)
+            {
+                pFrameGrinder->m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
+            }
             cv::imencode(".jpg", pFrame->m_frame, buf, qualityType);  
 
             DBG("copying frame from input: %d\n", (int)pcontext->id);

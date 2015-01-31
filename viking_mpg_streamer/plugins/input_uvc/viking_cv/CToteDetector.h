@@ -28,42 +28,11 @@
 /* (tax free) to "Marina High School Educational Foundation"  (Huntington Beach, CA)       */
 /*******************************************************************************************/
 
-#ifndef CBALLDETECTOR_H
-#define	CBALLDETECTOR_H
+#ifndef CTOTEDETECTOR_H
+#define	CTOTEDETECTOR_H
 
 //#define DISPLAY_CALIBRATION_INFO
 #define DETECT_LARGEST_BLOB_NO_FILTER_BASED_ON_SIZE
-
-#define VIEW_PIXEL_Y_WIDTH 240
-#define VIEW_PIXEL_X_HEIGHT 426
-
-#define MEASUREMENT_ARRAY_Y_WIDTH 7
-#define MEASUREMENT_ARRAY_X_HEIGHT 7
-
-#define MEAS_Y_RIGHT_EDGE (VIEW_PIXEL_Y_WIDTH-1)
-#define MEAS_Y_RIGHT 230
-#define MEAS_Y_MID_RIGHT 175
-#define MEAS_Y_CENTER 120
-#define MEAS_Y_MID_LEFT 65
-#define MEAS_Y_LEFT 10
-#define MEAS_Y_LEFT_EDGE 0
-
-/*
-#define MEAS_X_FAR_EDGE (VIEW_PIXEL_X_HEIGHT-1)
-#define MEAS_X_FAR 400
-#define MEAS_X_MID_FAR 375
-#define MEAS_X_CENTER 350
-#define MEAS_X_MID_NEAR 300
-#define MEAS_X_NEAR 250
-#define MEAS_X_NEAR_EDGE 0
-*/
-#define MEAS_X_FAR_EDGE (VIEW_PIXEL_X_HEIGHT-1)
-#define MEAS_X_FAR 400
-#define MEAS_X_MID_FAR 306
-#define MEAS_X_CENTER 213
-#define MEAS_X_MID_NEAR 94
-#define MEAS_X_NEAR 25
-#define MEAS_X_NEAR_EDGE 0
 
 class CToteDetector
 {
@@ -73,7 +42,7 @@ public:
     {
         float pixelRadius;
         float distanceToToteFeet;
-        float angleToToteDegrees;
+        float toteAngleDegrees;
     } RADIUS_TABLE_ITEM;
 
     CToteDetector();
@@ -85,25 +54,16 @@ public:
 
 private:
 
- 
-    bool isTooSmallToBeATote(const CToteRectangle& toteRectangle) const;
-    bool isTooBigToBeATote(const CToteRectangle& toteRectangle) const;
-
     float m_tolerancePercentForRadius;
     CGpioLed m_gpioLed;
 
 private:
-    bool filterContoursToFindToteBySize(
-           const std::vector<std::vector<cv::Point> >& listContours,
-            CToteRectangle& bestToteRectangle,
-            float& angleToToteDegrees,
-            float& distanceToToteFeet);
     bool filterContoursToFindLargestBlob(
             const std::vector<std::vector<cv::Point> >& listContours,
             CToteRectangle& bestToteRectangle,
-            float& angleToToteDegrees,
+            float& toteAngleDegrees,
             float& distanceToToteFeet);
 };
 
-#endif	/* CBALLDETECTOR_H */
+#endif	/* CTOTEDETECTOR_H */
 

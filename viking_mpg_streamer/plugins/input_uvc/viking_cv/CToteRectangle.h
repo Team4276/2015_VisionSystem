@@ -31,16 +31,14 @@
 #ifndef CBALLCIRCLE_H
 #define	CBALLCIRCLE_H
 
-class CToteRectangle
+class CToteRectangle : public cv::RotatedRect
 {
 public:
     CToteRectangle();
-    CToteRectangle(const CToteRectangle& orig);
     virtual ~CToteRectangle();
-
-    cv::Point2f m_ptCenter;
-    float m_radius;
-
+    CToteRectangle(const cv::RotatedRect& rect) : cv::RotatedRect(rect) {}
+    CToteRectangle& operator=(const cv::RotatedRect& rect);
+    
     void init();
     std::string displayText() const;
 };

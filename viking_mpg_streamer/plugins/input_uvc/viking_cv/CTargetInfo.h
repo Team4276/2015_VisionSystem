@@ -48,14 +48,9 @@ public:
     void updateTargetInfo(
             int timeSinceLastCameraFrameMilliseconds,
             int timeLatencyThisCameraFrameMilliseconds, 
-            bool isRightGreenTargetLit,
-            bool isLeftGreenTargetLit,
             bool isGrayToteFound,
             float angleFromStraightAheadToTote,
-            float offsetFromCenterlineToToteCenter,
-            bool isRedFound,
-            float angleFromStraightAheadToRed,
-            float distanceToRed);
+            float offsetFromCenterlineToToteCenter);
 
     void initTargetInfoFromText(const std::string& targetInfoText);
 
@@ -97,8 +92,34 @@ private:
     int m_timeSinceLastCameraFrameMilliseconds;
     int m_timeLatencyThisCameraFrameMilliseconds;
     int m_isGrayToteFound;
-    float m_angleFromStraightAheadToTote;
-    float m_offsetFromCenterlineToToteCenter;
+    float m_angleFromStraightAheadToTote;    // Range +-90 where plus is to the right and zero would make the long side of the tote parallel to the camera centerline
+    float m_offsetFromCenterlineToToteCenter;    // In inches.  Positive (+) means the centerline is to the right of the robot  
+    float m_distanceToToteCenterInches;   // As measured in a straight line from the center of where the collector wheels would optimally make first contact 
+    
+    // When the angle and both distances are zero, the robot is perfectly aligned and positioned to collect the tote
+    
+    // Automated drive strategy would be to take a small control option 10 times a second
+    // Always try to rotate the robot to make the m_angleFromStraightAheadToTote be zero
+    // If less than "X" inches to the tote  (Need to experiment to find best value for X))
+    //     If "close" to lined up on the centerline   (Also need to find out much misalignment the tote collector can comfortably handle))
+    //         Run the collector and drive forward to help collection
+    //     Else 
+    //         Go sideways toward the centerline
+    //     Endif
+    // Else   (Still far away)
+    //     If closer to the centerline than the tote
+    //         Go towards the tote
+    //     Else
+    //         Go sideways toward the centerline
+    //     Endif
+    // Endif
+
+
+    //     
+    
+    // Drive the robot until both offset and angle are zero and the tote should 
+    // be perfectly positioned so you can drive straight forward for pickup.
+    // After that drive forward until the distance is also zero and 
 };
 
 #endif	/* CTARGETINFO_H */

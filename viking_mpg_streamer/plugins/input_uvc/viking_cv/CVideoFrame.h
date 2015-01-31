@@ -30,6 +30,9 @@
 /*******************************************************************************************/
 
 
+#define VIEW_PIXEL_X_WIDTH 416
+#define VIEW_PIXEL_Y_HEIGHT 240
+
 
 class CVideoFrame
 {
@@ -50,8 +53,7 @@ public:
 
     void init();
     void updateAnnotationInfo(
-            const CToteRectangle& toteRectangleBlue,
-            const CToteRectangle& toteRectangleRed);
+            const CToteRectangle& ToteRectangleGray);
     void annotate();
     void compress();
 

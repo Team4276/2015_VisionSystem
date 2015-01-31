@@ -334,9 +334,9 @@ void CTestMonitor::monitorQueueTimesBeforeReturnToFreeQueue(CVideoFrame* pFrame,
         }
         else
         {
-            m_avgGrayToteRectangle.m_ptCenter.x /= m_nIntervalisGrayToteFound;
-            m_avgGrayToteRectangle.m_ptCenter.y /= m_nIntervalisGrayToteFound;
-            m_avgGrayToteRectangle.m_radius /= m_nIntervalisGrayToteFound;
+            m_avgGrayToteRectangle.center.x /= m_nIntervalisGrayToteFound;
+            m_avgGrayToteRectangle.center.y /= m_nIntervalisGrayToteFound;
+            m_avgGrayToteRectangle.angle /= m_nIntervalisGrayToteFound;
             sLine += "Gray rectangle (";
             sLine += numberToText(m_nIntervalisGrayToteFound);
             sLine += " in this interval) avg ";
@@ -378,9 +378,9 @@ void CTestMonitor::monitorQueueTimesBeforeReturnToFreeQueue(CVideoFrame* pFrame,
     if (pFrame->m_targetInfo.isGrayToteFound())
     {
         m_nIntervalisGrayToteFound++;
-        m_avgGrayToteRectangle.m_ptCenter.x += pFrame->m_toteRectangleGray.m_ptCenter.x;
-        m_avgGrayToteRectangle.m_ptCenter.y += pFrame->m_toteRectangleGray.m_ptCenter.y;
-        m_avgGrayToteRectangle.m_radius += pFrame->m_toteRectangleGray.m_radius;
+        m_avgGrayToteRectangle.center.x += pFrame->m_toteRectangleGray.center.x;
+        m_avgGrayToteRectangle.center.y += pFrame->m_toteRectangleGray.center.y;
+        m_avgGrayToteRectangle.angle += pFrame->m_toteRectangleGray.angle;
     }
     m_avgElapsedSeconds[TIME_IN_TASK_CAMERA] += getDeltaTimeSeconds(
             pFrame->m_timeRemovedFromQueue[(int) CVideoFrame::FRAME_QUEUE_FREE], // earlier time

@@ -402,13 +402,28 @@ Return Value: unused, always NULL
 void *cam_thread(void *arg)
 {
     CVideoFrame* pFrame = NULL;
-    int width = 416;  // 416x240
-    int height = 240;
+    int width = VIEW_PIXEL_X_WIDTH;
+    int height = VIEW_PIXEL_Y_HEIGHT;
     unsigned char *picture = (unsigned char *)malloc(width * height *3*sizeof(char));
     IplImage * img = cvCreateImage(cvSize(width,height),IPL_DEPTH_8U,3);   // obraz OpenCV
 
     frameGrinder.init();
 
+#ifdef TEST_USE_JPEGS_NOT_CAMERA 
+    std::string sBasePath = "/home/";
+    sBasePath += HOME_NAME;
+    std::string sPath = sBasePath;
+    sPath += "/Lifecam_FireBlanket.jpg";
+    cv::Mat frame1 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
+    sPath = sBasePath;
+    sPath += "/Lifecam_FireBlanket.jpg";
+    cv::Mat frame2 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
+    if (frame2.empty()) {
+        dbgMsg_s("Failed to read image data from a file\n");
+    }
+    bool toggle = false;
+#endif
+    
     context *pcontext = (context*)arg;
     pglobal = pcontext->pglobal;
 
@@ -420,6 +435,31 @@ void *cam_thread(void *arg)
             usleep(1); // maybe not the best way so FIXME
         }
 
+#ifdef TEST_USE_JPEGS_NOT_CAMERA 
+        if (frameGrinder.safeGetFreeFrame(&pFrame))
+        {
+            if(toggle)
+            {
+                pFrame->m_frame = frame1;   
+            }
+            else
+            {
+                pFrame->m_frame = frame2;   
+            }
+            toggle = (!toggle);
+            if (!pFrame->m_frame.empty())
+            {
+                frameGrinder.safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_WAIT_FOR_BLOB_DETECT);
+            }
+            else
+            {
+                dbgMsg_s("Frame is empty\n");
+                frameGrinder.safeAddTail(pFrame, CVideoFrame::FRAME_QUEUE_FREE);
+            }
+             frameGrinder.m_testMonitor.m_nTasksDone[CTestMonitor::TASK_DONE_CAMERA]++;
+        }
+
+#else
         /* grab a frame */
         if(uvcGrab(pcontext->videoIn) < 0) {
             IPRINT("Error grabbing frames\n");
@@ -469,7 +509,7 @@ void *cam_thread(void *arg)
 
 #else // #ifndef NO_CV_JUST_STREAM_THE_CAMERA
         
-      if (frameGrinder.safeGetFreeFrame(&pFrame))
+        if (frameGrinder.safeGetFreeFrame(&pFrame))
         {
             std::vector<uchar> vectordata(pcontext->videoIn->tmpbuffer, pcontext->videoIn->tmpbuffer+(height*width));
             cv::Mat data_mat(vectordata, false);
@@ -489,6 +529,7 @@ void *cam_thread(void *arg)
 
 #endif  // #ifndef NO_CV_JUST_STREAM_THE_CAMERA
 
+#endif   // TEST_USE_JPEGS_NOT_CAMERA
     }
 
     DBG("leaving input thread, calling cleanup function now\n");
