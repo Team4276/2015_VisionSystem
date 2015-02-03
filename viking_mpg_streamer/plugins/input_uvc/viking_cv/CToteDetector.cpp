@@ -73,13 +73,14 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
     {
         static struct timespec timeLastCameraFrame = {0};
         static struct timespec timeNow = {0};
-        cv::Mat img_hsv, gray_blob, afterThreshold;
+        cv::Mat img_hsv, gray_blob, binary_blob, binary_blob_8u;
         static int iCount = 0;
 
         int timeSinceLastCameraFrameMilliseconds = (int) CTestMonitor::getDeltaTimeMilliseconds(
                 timeLastCameraFrame,
                 pFrame->m_timeAddedToQueue[(int) CVideoFrame::FRAME_QUEUE_WAIT_FOR_BLOB_DETECT]);
         timeLastCameraFrame = pFrame->m_timeAddedToQueue[(int) CVideoFrame::FRAME_QUEUE_WAIT_FOR_BLOB_DETECT];
+       
 
         // RBG is flawed as a way to filter based on color because the brightness is combined 
         // with the color info. 
@@ -91,14 +92,33 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
         cv::inRange(img_hsv, cv::Scalar(30, 15, 32), cv::Scalar(80, 220, 220), gray_blob);
             
         iCount++;
-        //if ((iCount % 17) == 0)
+        if ((iCount % 17) == 0)
         {
             pFrameGrinder->m_testMonitor.saveFrameToJpeg(gray_blob);
         }
-        
-        //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
+      
+
+        // make a kernel of 4x4, all 1's
+        cv::Mat kernel = cv::Mat::ones(cv::Size(2, 2), CV_8U);
+        cv::erode(gray_blob, gray_blob, kernel);
+
+         //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
         std::vector<std::vector<cv::Point> > grayContours;
-        cv::findContours(afterThreshold, grayContours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE );
+        try
+        {
+            cv::findContours(gray_blob, grayContours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
+        }
+        catch( cv::Exception& e )
+        {
+            const char* err_msg = e.what();
+            dbgMsg_s(err_msg);
+        }
+        
+        //const cv::Scalar colorGreen = cv::Scalar(0, 255, 0);
+        //for (int i = 0; i < grayContours.size(); i++){
+        //    cv::drawContours(pFrame->m_frame, grayContours, i, colorGreen, 1, 8);
+        //}
+        //pFrameGrinder->m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
 
         CToteRectangle bestToteRectangleGray;
         float angleToBlueToteDegrees = 0.0;
@@ -107,7 +127,6 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
 #ifdef DETECT_LARGEST_BLOB_NO_FILTER_BASED_ON_SIZE
         isGrayToteFound = filterContoursToFindLargestBlob(grayContours, bestToteRectangleGray, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
 
-        isGrayToteFound = true;
 #ifdef DISPLAY_CALIBRATION_INFO
         printf("viking_cv version %d.%d.%d", VERSION_YEAR, VERSION_INTERFACE, VERSION_BUILD);
         if (isGrayToteFound)
@@ -166,8 +185,8 @@ bool CToteDetector::filterContoursToFindLargestBlob(
     for (i = 0; i < listContours.size(); i++)
     {
         tempRect = cv::minAreaRect(cv::Mat(listContours[i]));
-        //area = tempRect.size.width * tempRect.size.height;
-        //if ((area > 100.0) && (area < 400))
+        area = tempRect.size.width * tempRect.size.height;
+        if ((area > 10000.0) && (area < 15000.0))
         {
             if(max < area)
             {

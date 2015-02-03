@@ -65,16 +65,19 @@ void CVideoFrame::annotate()
 {
     const cv::Scalar colorGreen = cv::Scalar(0, 255, 0);
     const cv::Scalar colorOrange = cv::Scalar(0, 128, 255);
+    const cv::Scalar colorYellow = cv::Scalar(0, 255, 255);
 
-    const int pixelOffsetFromCenterlineToCamera = +600;  // Positive means the centerline is to the right of the camera
-    const int pixelDistanceFromBottomOfViewToCollectorWheels = 80;
+    const int pixelOffsetFromCenterlineToCamera = +60;  // Positive means the centerline is to the right of the camera
+    const int pixelDistanceFromBottomOfViewToCollectorWheels = 110;
     
+    //cv::Point pt1((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, 0);
+    //cv::Point pt2((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, (pixelDistanceFromBottomOfViewToCollectorWheels + 20));
     cv::Point pt1((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, VIEW_PIXEL_Y_HEIGHT);
-    cv::Point pt2((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, VIEW_PIXEL_Y_HEIGHT - (pixelDistanceFromBottomOfViewToCollectorWheels + 20));
+    cv::Point pt2((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, VIEW_PIXEL_Y_HEIGHT - pixelDistanceFromBottomOfViewToCollectorWheels);
     cv::line(m_frame, pt1, pt2, colorGreen, 3, 4, 0);
     
-    cv::Point pt3((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera - 20, VIEW_PIXEL_Y_HEIGHT - pixelDistanceFromBottomOfViewToCollectorWheels);
-    cv::Point pt4((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera + 20, VIEW_PIXEL_Y_HEIGHT - pixelDistanceFromBottomOfViewToCollectorWheels);
+    cv::Point pt3((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera - 20, VIEW_PIXEL_Y_HEIGHT - (pixelDistanceFromBottomOfViewToCollectorWheels-20));
+    cv::Point pt4((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera + 20, VIEW_PIXEL_Y_HEIGHT - (pixelDistanceFromBottomOfViewToCollectorWheels-20));
     cv::line(m_frame, pt3, pt4, colorGreen, 3, 4, 0);
         
     if (m_targetInfo.isGrayToteFound())
@@ -87,18 +90,10 @@ void CVideoFrame::annotate()
         cv::Point2f pt7((pts[2].x + pts[3].x)/2,(pts[2].y + pts[3].y)/2 );
         cv::Point2f pt8((pts[3].x + pts[0].x)/2,(pts[3].y + pts[0].y)/2 );
          
-        cv::line(m_frame, pt5, m_toteRectangleGray.center, colorOrange, 3, 4, 0);
-        cv::line(m_frame, pt6, m_toteRectangleGray.center, colorOrange, 3, 4, 0);
-        cv::line(m_frame, pt7, m_toteRectangleGray.center, colorOrange, 3, 4, 0);
-        cv::line(m_frame, pt8, m_toteRectangleGray.center, colorOrange, 3, 4, 0);
-
-        // Draw the rectangle
-        cv::line(m_frame, pts[0], pts[1], colorOrange, 3, 4, 0);
-        cv::line(m_frame, pts[1], pts[2], colorOrange, 3, 4, 0);
-        cv::line(m_frame, pts[2], pts[3], colorOrange, 3, 4, 0);
-        cv::line(m_frame, pts[3], pts[0], colorOrange, 3, 4, 0);
-
-
+        cv::line(m_frame, pt5, m_toteRectangleGray.center, colorYellow, 3, 4, 0);
+        cv::line(m_frame, pt6, m_toteRectangleGray.center, colorYellow, 3, 4, 0);
+        cv::line(m_frame, pt7, m_toteRectangleGray.center, colorYellow, 3, 4, 0);
+        cv::line(m_frame, pt8, m_toteRectangleGray.center, colorYellow, 3, 4, 0);
     }
 }
 
