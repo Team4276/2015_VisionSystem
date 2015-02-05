@@ -37,6 +37,9 @@
 
 //#define NO_CV_JUST_STREAM_THE_CAMERA
 
+//#define COLORFILTER_ZOOKS_CLASSROOM_LIFECAM
+#define COLORFILTER_MARINA_HALLWAY_LIFECAM
+
 
 extern void dbgInit();
 extern void dbgMsg(const char* msg);

@@ -218,7 +218,7 @@ void* browser_server_thread(void* pVoid)
             
             pFrame->annotate();
             iCount++;
-            if((iCount % 17) == 0)
+            //if((iCount % 17) == 0)
             {
                 pFrameGrinder->m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
             }

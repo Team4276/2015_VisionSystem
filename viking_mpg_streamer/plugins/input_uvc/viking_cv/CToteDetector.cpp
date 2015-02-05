@@ -50,6 +50,7 @@
 #include "dbgMsg.h"
 #include "viking_cv_version.h"
 
+
 CToteDetector::CToteDetector()
 {
 }
@@ -89,10 +90,17 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
         cv::cvtColor(pFrame->m_frame, img_hsv, CV_BGR2HSV);
 
         // Filter out all but Gray hue
+        
+#ifdef COLORFILTER_ZOOKS_CLASSROOM_LIFECAM
         cv::inRange(img_hsv, cv::Scalar(30, 15, 32), cv::Scalar(80, 220, 220), gray_blob);
+#endif
+        
+#ifdef COLORFILTER_MARINA_HALLWAY_LIFECAM
+        cv::inRange(img_hsv, cv::Scalar(30, 0, 90), cv::Scalar(220, 80, 160), gray_blob);
+#endif
             
         iCount++;
-        if ((iCount % 17) == 0)
+        //if ((iCount % 17) == 0)
         {
             pFrameGrinder->m_testMonitor.saveFrameToJpeg(gray_blob);
         }
@@ -186,7 +194,7 @@ bool CToteDetector::filterContoursToFindLargestBlob(
     {
         tempRect = cv::minAreaRect(cv::Mat(listContours[i]));
         area = tempRect.size.width * tempRect.size.height;
-        if ((area > 10000.0) && (area < 15000.0))
+        //if ((area > 10000.0) && (area < 15000.0))
         {
             if(max < area)
             {

@@ -413,10 +413,23 @@ void *cam_thread(void *arg)
     std::string sBasePath = "/home/";
     sBasePath += HOME_NAME;
     std::string sPath = sBasePath;
+    
+    cv::Mat frame1;
+#ifdef COLORFILTER_ZOOKS_CLASSROOM_LIFECAM
     sPath += "/Lifecam_FireBlanket.jpg";
-    cv::Mat frame1 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
+    frame1 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
     sPath = sBasePath;
     sPath += "/Lifecam_FireBlanket.jpg";
+#endif
+    
+#ifdef COLORFILTER_MARINA_HALLWAY_LIFECAM
+    sPath += "/MarinaHallwayLifecam_4Feb2015.jpg";
+    frame1 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
+    sPath = sBasePath;
+    sPath += "/MarinaHallwayLifecam2_4Feb2015.jpg";
+#endif
+    
+    
     cv::Mat frame2 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
     if (frame2.empty()) {
         dbgMsg_s("Failed to read image data from a file\n");
