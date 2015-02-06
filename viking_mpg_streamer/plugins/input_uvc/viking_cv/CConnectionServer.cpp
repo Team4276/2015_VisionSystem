@@ -216,9 +216,13 @@ void* browser_server_thread(void* pVoid)
            /* copy JPG picture to global buffer */
             pthread_mutex_lock(&pglobal->in[pcontext->id].db);
             
-            pFrame->annotate();
             iCount++;
-            //if((iCount % 17) == 0)
+            if((iCount % 19) == 0)
+            {
+                pFrameGrinder->m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
+            }
+            pFrame->annotate();
+            if((iCount % 23) == 0)
             {
                 pFrameGrinder->m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
             }

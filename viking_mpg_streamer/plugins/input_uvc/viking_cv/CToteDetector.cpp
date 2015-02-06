@@ -100,7 +100,7 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
 #endif
             
         iCount++;
-        //if ((iCount % 17) == 0)
+        if ((iCount % 17) == 0)
         {
             pFrameGrinder->m_testMonitor.saveFrameToJpeg(gray_blob);
         }
