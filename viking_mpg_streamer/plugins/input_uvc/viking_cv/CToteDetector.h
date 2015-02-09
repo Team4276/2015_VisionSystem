@@ -61,8 +61,9 @@ private:
     bool filterContoursToFindLargestBlob(
             const std::vector<std::vector<cv::Point> >& listContours,
             CToteRectangle& bestToteRectangle,
+            float& toteDirectionDegrees,
             float& toteAngleDegrees,
-            float& distanceToToteFeet);
+            float& distanceToToteCenterInches);
 };
 
 #endif	/* CTOTEDETECTOR_H */

@@ -49,8 +49,9 @@ public:
             int timeSinceLastCameraFrameMilliseconds,
             int timeLatencyThisCameraFrameMilliseconds, 
             bool isGrayToteFound,
-            float angleFromStraightAheadToTote,
-            float offsetFromCenterlineToToteCenter);
+            float toteDirectionDegrees,
+            float toteAngleDegrees,
+            float distanceToToteCenterInches);
 
     void initTargetInfoFromText(const std::string& targetInfoText);
 
@@ -71,18 +72,6 @@ public:
         return m_isGrayToteFound;
     }
 
-    /* degrees, + == to the right */
-    float angleFromStraightAheadToTote() const
-    {
-        return m_angleFromStraightAheadToTote;
-    }
-
-    /* feet from back of robot, should always be positive */
-    float offsetFromCenterlineToToteCenter() const
-    {
-        return m_offsetFromCenterlineToToteCenter;
-    }
-
     void initFormattedTextFromTargetInfo();
 
 private:
@@ -92,34 +81,19 @@ private:
     int m_timeSinceLastCameraFrameMilliseconds;
     int m_timeLatencyThisCameraFrameMilliseconds;
     int m_isGrayToteFound;
-    float m_angleFromStraightAheadToTote;    // Range +-90 where plus is to the right and zero would make the long side of the tote parallel to the camera centerline
-    float m_offsetFromCenterlineToToteCenter;    // In inches.  Positive (+) means the centerline is to the right of the robot  
-    float m_distanceToToteCenterInches;   // As measured in a straight line from the center of where the collector wheels would optimally make first contact 
     
-    // When the angle and both distances are zero, the robot is perfectly aligned and positioned to collect the tote
+    // If this is zero the robot is pointed at the tote center. 
+    // Positive (+) means tote is to the right, and the robot needs to rotate clockwise to reduce the angle to zero
+    float m_toteDirectionDegrees;            
     
-    // Automated drive strategy would be to take a small control option 10 times a second
-    // Always try to rotate the robot to make the m_angleFromStraightAheadToTote be zero
-    // If less than "X" inches to the tote  (Need to experiment to find best value for X))
-    //     If "close" to lined up on the centerline   (Also need to find out much misalignment the tote collector can comfortably handle))
-    //         Run the collector and drive forward to help collection
-    //     Else 
-    //         Go sideways toward the centerline
-    //     Endif
-    // Else   (Still far away)
-    //     If closer to the centerline than the tote
-    //         Go towards the tote
-    //     Else
-    //         Go sideways toward the centerline
-    //     Endif
-    // Endif
-
-
-    //     
+    // Rotation of the tote around its center, relative to a straight line from the robot to the tote 
+    // Positive (+) means tote is rotated clockwise and the robot needs to move left to reduce the angle to zero
+    float m_toteAngleDegrees;                  
     
-    // Drive the robot until both offset and angle are zero and the tote should 
-    // be perfectly positioned so you can drive straight forward for pickup.
-    // After that drive forward until the distance is also zero and 
+    // As measured in a straight line from the center of the robot to the center of the tote
+    // For autonomous operation want to arrive at a position where both angles are zero and this distance is a fixed offset "X"
+    // "X" is TBD, depending on ideal distance from the tote to begin autonomous tote pickup
+    float m_distanceToToteCenterInches;      
 };
 
 #endif	/* CTARGETINFO_H */

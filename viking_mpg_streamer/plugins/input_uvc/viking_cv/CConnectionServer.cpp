@@ -39,6 +39,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/features2d/features2d.hpp>
+#include <netinet/in.h>
 
 #include "../v4l2uvc.h" // this header will includes the ../../mjpg_streamer.h
 
@@ -208,6 +209,23 @@ void* browser_server_thread(void* pVoid)
     std::vector<int> qualityType;
     qualityType.push_back(CV_IMWRITE_JPEG_QUALITY);
     qualityType.push_back(50);
+    
+    int bytesWritten = 0;
+    int sockfd = socket(AF_INET, SOCK_DGRAM,0);
+    union 
+    {
+        struct in_addr addr;
+        unsigned char b[4];
+    } u;
+    struct sockaddr_in ipRoboRio;
+    memset(&ipRoboRio, 0, sizeof(struct sockaddr_in));
+    ipRoboRio.sin_family = AF_INET;
+    ipRoboRio.sin_port = htons(5801);
+    u.b[0] = 192;
+    u.b[1] = 168;
+    u.b[2] = 1;
+    u.b[3] = 120;
+    ipRoboRio.sin_addr = u.addr;
 
     while (!g_isShutdown)
     {
@@ -239,6 +257,9 @@ void* browser_server_thread(void* pVoid)
             pthread_cond_broadcast(&pglobal->in[pcontext->id].db_update);
             pthread_mutex_unlock(&pglobal->in[pcontext->id].db);
 
+            bytesWritten = sendto(sockfd, &(pFrame->m_targetInfo), sizeof(CTargetInfo), 0, 
+                                (struct sockaddr*)&ipRoboRio, sizeof(struct sockaddr_in));
+            
             pFrameGrinder->m_testMonitor.m_nTasksDone[CTestMonitor::TASK_DONE_BROWSER]++;
 
             pFrameGrinder->m_testMonitor.monitorQueueTimesBeforeReturnToFreeQueue(pFrame, pFrameGrinder);

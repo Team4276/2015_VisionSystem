@@ -57,34 +57,37 @@ void CTargetInfo::init()
     m_timeSinceLastCameraFrameMilliseconds = 0;
     m_timeLatencyThisCameraFrameMilliseconds = 0;
     m_isGrayToteFound = 0;
-    m_angleFromStraightAheadToTote = 0.0;
-    m_offsetFromCenterlineToToteCenter = 0.0;
+    m_toteDirectionDegrees = -999.0;
+    m_toteAngleDegrees = -999.0;
+    m_distanceToToteCenterInches = -1.0;
 }
 
 void CTargetInfo::updateTargetInfo(
         int timeSinceLastCameraFrameMilliseconds,
         int timeLatencyThisCameraFrameMilliseconds,
         bool isGrayToteFound,
-        float angleFromStraightAheadToTote,
-        float offsetFromCenterlineToToteCenter)
+        float toteDirectionDegrees,
+        float toteAngleDegrees,
+        float distanceToToteCenterInches)
 {
     init();
 
     m_timeSinceLastCameraFrameMilliseconds = timeSinceLastCameraFrameMilliseconds;
     m_timeLatencyThisCameraFrameMilliseconds = timeLatencyThisCameraFrameMilliseconds;
 
-    // isFound() is needed for frame annotation,  even ifCV is not oriented)
     m_isGrayToteFound = isGrayToteFound;
 
     if (isGrayToteFound)
     {
-        m_angleFromStraightAheadToTote = angleFromStraightAheadToTote;
-        m_offsetFromCenterlineToToteCenter = offsetFromCenterlineToToteCenter;
+        m_toteDirectionDegrees = toteDirectionDegrees;
+        m_toteAngleDegrees = toteAngleDegrees;
+        m_distanceToToteCenterInches = distanceToToteCenterInches;
     }
     else
     {
-        m_angleFromStraightAheadToTote = -999;
-        m_offsetFromCenterlineToToteCenter = 999;
+        m_toteDirectionDegrees = -999.0;
+        m_toteAngleDegrees = -999.0;
+        m_distanceToToteCenterInches = -1.0;
     }
 }
 
@@ -96,14 +99,17 @@ void CTargetInfo::initTargetInfoFromText(const std::string& targetInfoText)
 void CTargetInfo::initFormattedTextFromTargetInfo()
 {
     char buf[128];
-    int angleFromStraightAheadToTote = (int) (m_angleFromStraightAheadToTote * 10.0);
-    int offsetFromCenterlineToToteCenter = (int) (m_offsetFromCenterlineToToteCenter * 12.0);
+    int iTemp1 = (int) (m_toteDirectionDegrees * 10.0);
+    int iTemp2 = (int) (m_toteAngleDegrees * 10.0);
+    int iTemp3 = (int) (m_distanceToToteCenterInches * 10.0);
+
     // Format text for transmission to the cRio
-    sprintf(buf, "%d,%d,%d,%d,%d",
+    sprintf(buf, "%d,%d,%d,%d,%d,%d",
             m_timeSinceLastCameraFrameMilliseconds,
             m_timeLatencyThisCameraFrameMilliseconds,
             m_isGrayToteFound,
-            angleFromStraightAheadToTote,
-            offsetFromCenterlineToToteCenter);
+            iTemp1,
+            iTemp2,
+            iTemp3);
     m_targetInfoText = buf;
 }

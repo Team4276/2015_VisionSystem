@@ -129,11 +129,13 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
         //pFrameGrinder->m_testMonitor.saveFrameToJpeg(pFrame->m_frame);
 
         CToteRectangle bestToteRectangleGray;
-        float angleToBlueToteDegrees = 0.0;
-        float offsetFromCenterlineToToteCenterToteFeet = 0.0;
+        float toteDirectionDegrees = 0.0;
+        float toteAngleDegrees = 0.0;
+        float distanceToToteCenterInches = 0.0;
         bool isGrayToteFound = false;
 #ifdef DETECT_LARGEST_BLOB_NO_FILTER_BASED_ON_SIZE
-        isGrayToteFound = filterContoursToFindLargestBlob(grayContours, bestToteRectangleGray, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
+        isGrayToteFound = filterContoursToFindLargestBlob(grayContours, bestToteRectangleGray,
+                                                           toteDirectionDegrees, toteAngleDegrees, distanceToToteCenterInches);
 
 #ifdef DISPLAY_CALIBRATION_INFO
         printf("viking_cv version %d.%d.%d", VERSION_YEAR, VERSION_INTERFACE, VERSION_BUILD);
@@ -161,7 +163,7 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
 
         pFrame->m_targetInfo.updateTargetInfo(
                 timeSinceLastCameraFrameMilliseconds, timeLatencyThisCameraFrameMilliseconds, 
-                isGrayToteFound, angleToBlueToteDegrees, offsetFromCenterlineToToteCenterToteFeet);
+                isGrayToteFound, toteDirectionDegrees, toteAngleDegrees, distanceToToteCenterInches);
 
         pFrame->updateAnnotationInfo(bestToteRectangleGray);
 
@@ -175,13 +177,18 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
 bool CToteDetector::filterContoursToFindLargestBlob(
         const std::vector<std::vector<cv::Point> >& listContours,
         CToteRectangle& bestToteRectangle,
+        float& toteDirectionDegrees,
         float& toteAngleDegrees,
-        float& distanceToToteFeet)
+        float& distanceToToteCenterInches)
 {
+    const cv::Point2f robotCenter(VIEW_PIXEL_X_WIDTH + (PIXEL_OFFSET_FROM_CENTERLINE_TO_CAMERA), 
+            VIEW_PIXEL_Y_HEIGHT + PIXEL_OFFSET_FROM_ROBOT_CENTER_TO_BOTTOM_OF_VIEW);
+    
     bool isToteFound = false;
     bestToteRectangle.init();
+    toteDirectionDegrees = -999.0;
     toteAngleDegrees = -999.0;
-    distanceToToteFeet = -1.0;
+    distanceToToteCenterInches = -1.0;
 
     unsigned int i = 0;
     CToteRectangle tempToteRectangle;
@@ -206,8 +213,13 @@ bool CToteDetector::filterContoursToFindLargestBlob(
     }
     if (isToteFound)
     {
-        //toteAngleDegrees = m_lookupTable[(int) bestToteRectangle.m_ptCenter.x][(int) bestToteRectangle.m_ptCenter.y].toteAngleDegrees;
-        //distanceToToteFeet = m_lookupTable[(int) bestToteRectangle.m_ptCenter.x][(int) bestToteRectangle.m_ptCenter.y].distanceToToteFeet;
+        cv::Point2f diff = robotCenter - bestToteRectangle.center;
+        distanceToToteCenterInches = cv::sqrt(diff.x*diff.x + diff.y*diff.y);
+        distanceToToteCenterInches *= INCHES_PER_PIXEL;
+
+        toteDirectionDegrees = atan(diff.x/diff.y) * DEGREES_PER_RADIAN;
+        
+        toteAngleDegrees = bestToteRectangle.angle;
     }
     return isToteFound;
 }

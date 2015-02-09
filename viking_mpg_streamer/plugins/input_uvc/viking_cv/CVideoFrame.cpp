@@ -66,18 +66,15 @@ void CVideoFrame::annotate()
     const cv::Scalar colorGreen = cv::Scalar(0, 255, 0);
     const cv::Scalar colorOrange = cv::Scalar(0, 128, 255);
     const cv::Scalar colorYellow = cv::Scalar(0, 255, 255);
-
-    const int pixelOffsetFromCenterlineToCamera = +60;  // Positive means the centerline is to the right of the camera
-    const int pixelDistanceFromBottomOfViewToCollectorWheels = 110;
     
-    //cv::Point pt1((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, 0);
-    //cv::Point pt2((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, (pixelDistanceFromBottomOfViewToCollectorWheels + 20));
-    cv::Point pt1((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, VIEW_PIXEL_Y_HEIGHT);
-    cv::Point pt2((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera, VIEW_PIXEL_Y_HEIGHT - pixelDistanceFromBottomOfViewToCollectorWheels);
+    //cv::Point pt1((VIEW_PIXEL_X_WIDTH/2) + PIXEL_OFFSET_FROM_CENTERLINE_TO_CAMERA, 0);
+    //cv::Point pt2((VIEW_PIXEL_X_WIDTH/2) + PIXEL_OFFSET_FROM_CENTERLINE_TO_CAMERA, (PIXEL_OFFSET_FROM_BOTTOM_OF_VIEW_TO_COLLECTOR_WHEELS + 20));
+    cv::Point pt1((VIEW_PIXEL_X_WIDTH/2) + PIXEL_OFFSET_FROM_CENTERLINE_TO_CAMERA, VIEW_PIXEL_Y_HEIGHT);
+    cv::Point pt2((VIEW_PIXEL_X_WIDTH/2) + PIXEL_OFFSET_FROM_CENTERLINE_TO_CAMERA, VIEW_PIXEL_Y_HEIGHT - PIXEL_OFFSET_FROM_BOTTOM_OF_VIEW_TO_COLLECTOR_WHEELS);
     cv::line(m_frame, pt1, pt2, colorGreen, 3, 4, 0);
     
-    cv::Point pt3((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera - 20, VIEW_PIXEL_Y_HEIGHT - (pixelDistanceFromBottomOfViewToCollectorWheels-20));
-    cv::Point pt4((VIEW_PIXEL_X_WIDTH/2) + pixelOffsetFromCenterlineToCamera + 20, VIEW_PIXEL_Y_HEIGHT - (pixelDistanceFromBottomOfViewToCollectorWheels-20));
+    cv::Point pt3((VIEW_PIXEL_X_WIDTH/2) + PIXEL_OFFSET_FROM_CENTERLINE_TO_CAMERA - 20, VIEW_PIXEL_Y_HEIGHT - (PIXEL_OFFSET_FROM_BOTTOM_OF_VIEW_TO_COLLECTOR_WHEELS-20));
+    cv::Point pt4((VIEW_PIXEL_X_WIDTH/2) + PIXEL_OFFSET_FROM_CENTERLINE_TO_CAMERA + 20, VIEW_PIXEL_Y_HEIGHT - (PIXEL_OFFSET_FROM_BOTTOM_OF_VIEW_TO_COLLECTOR_WHEELS-20));
     cv::line(m_frame, pt3, pt4, colorGreen, 3, 4, 0);
         
     if (m_targetInfo.isGrayToteFound())
