@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package test_streamer;
 
 /**
@@ -17,16 +13,20 @@ public class JTargetInfo
     int m_isGrayToteFound;  // zero == false,  nonzero == true
     
     // If this is zero the robot is pointed at the tote center. 
-    // Positive (+) means tote is to the right, and the robot needs to rotate clockwise to reduce the angle to zero
+    // Positive (+) means tote is to the right, and the robot needs to rotate 
+    // clockwise to reduce the angle to zero
     double m_toteDirectionDegrees;
     
-    // Rotation of the tote around its center, relative to a straight line from the robot to the tote 
-    // Positive (+) means tote is rotated clockwise and the robot needs to move left to reduce the angle to zero
+    // Rotation of the tote around its center, relative to a straight line from 
+    // the robot to the tote. Positive (+) means tote is rotated clockwise and 
+    // the robot needs to move left to reduce the angle to zero
     double m_toteAngleDegrees;
     
-    // As measured in a straight line from the center of the robot to the center of the tote
-    // For autonomous operation want to arrive at a position where both angles are zero and this distance is a fixed offset "X"
-    // "X" is TBD, depending on ideal distance from the tote to begin autonomous tote pickup
+    // As measured in a straight line from the center of the robot to the center 
+    // of the tote. For autonomous operation want to arrive at a position where 
+    // both angles are zero and this distance is a fixed offset "X"
+    // "X" is TBD, depending on ideal distance from the tote to begin autonomous
+    // tote pickup
     double m_distanceToToteCenterInches;
     
     int commaPos;
