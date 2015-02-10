@@ -203,7 +203,7 @@ void* browser_server_thread(void* pVoid)
     unsigned int i = 0;
     CFrameGrinder* pFrameGrinder = (CFrameGrinder*) pVoid;
     CVideoFrame* pFrame = 0;
-    char head[1024];
+    std::string sTemp;
  
     std::vector<unsigned char> buf;
     std::vector<int> qualityType;
@@ -221,9 +221,9 @@ void* browser_server_thread(void* pVoid)
     memset(&ipRoboRio, 0, sizeof(struct sockaddr_in));
     ipRoboRio.sin_family = AF_INET;
     ipRoboRio.sin_port = htons(5801);
-    u.b[0] = 192;
-    u.b[1] = 168;
-    u.b[2] = 1;
+    u.b[0] = 10;
+    u.b[1] = 42;
+    u.b[2] = 76;
     u.b[3] = 120;
     ipRoboRio.sin_addr = u.addr;
 
@@ -257,7 +257,9 @@ void* browser_server_thread(void* pVoid)
             pthread_cond_broadcast(&pglobal->in[pcontext->id].db_update);
             pthread_mutex_unlock(&pglobal->in[pcontext->id].db);
 
-            bytesWritten = sendto(sockfd, &(pFrame->m_targetInfo), sizeof(CTargetInfo), 0, 
+            sTemp = pFrame->m_targetInfo.initFormattedTextFromTargetInfo();
+
+            bytesWritten = sendto(sockfd, sTemp.c_str(), sTemp.size(), 0, 
                                 (struct sockaddr*)&ipRoboRio, sizeof(struct sockaddr_in));
             
             pFrameGrinder->m_testMonitor.m_nTasksDone[CTestMonitor::TASK_DONE_BROWSER]++;

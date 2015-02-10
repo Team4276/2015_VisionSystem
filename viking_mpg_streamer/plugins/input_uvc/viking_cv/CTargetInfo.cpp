@@ -53,7 +53,6 @@ CTargetInfo::~CTargetInfo()
 
 void CTargetInfo::init()
 {
-    m_targetInfoText = "";
     m_timeSinceLastCameraFrameMilliseconds = 0;
     m_timeLatencyThisCameraFrameMilliseconds = 0;
     m_isGrayToteFound = 0;
@@ -96,7 +95,7 @@ void CTargetInfo::initTargetInfoFromText(const std::string& targetInfoText)
     // Transmit on;y - no need for this conversion 
 }
 
-void CTargetInfo::initFormattedTextFromTargetInfo()
+std::string CTargetInfo::initFormattedTextFromTargetInfo()
 {
     char buf[128];
     int iTemp1 = (int) (m_toteDirectionDegrees * 10.0);
@@ -111,5 +110,6 @@ void CTargetInfo::initFormattedTextFromTargetInfo()
             iTemp1,
             iTemp2,
             iTemp3);
-    m_targetInfoText = buf;
+    return buf;
+    
 }

@@ -41,10 +41,6 @@ public:
 
     void init();
 
-    std::string displayText() const
-    {
-        return m_targetInfoText;
-    }
     void updateTargetInfo(
             int timeSinceLastCameraFrameMilliseconds,
             int timeLatencyThisCameraFrameMilliseconds, 
@@ -72,12 +68,9 @@ public:
         return m_isGrayToteFound;
     }
 
-    void initFormattedTextFromTargetInfo();
+    std::string initFormattedTextFromTargetInfo();
 
 private:
-
-
-    std::string m_targetInfoText;
     int m_timeSinceLastCameraFrameMilliseconds;
     int m_timeLatencyThisCameraFrameMilliseconds;
     int m_isGrayToteFound;

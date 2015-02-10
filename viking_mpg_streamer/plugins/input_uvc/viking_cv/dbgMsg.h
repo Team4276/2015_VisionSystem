@@ -33,7 +33,7 @@
 #define	DBGMSG_H
 
 #define HOME_NAME "ubuntu"
-#define TEST_USE_JPEGS_NOT_CAMERA
+//#define TEST_USE_JPEGS_NOT_CAMERA
 
 //#define NO_CV_JUST_STREAM_THE_CAMERA
 
