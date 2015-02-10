@@ -2,7 +2,7 @@ This tester shows how a java application on the cRIO can collect distance and di
 by the viking_cv program running on the BeagleBone.  This text stream could as easily be sent to the driver station.
 
 To build all you need is the most recent JDK and Netbeans 7.3.1 or later.  
-Edit the source code to set the IP address to point to the BeagleBone, (e.g. "192.168.1.19:5555")
+Edit the source code to set the IP address to point to the BeagleBone, (e.g. "10.42.76.120:5801")
 Once built, the resulting jar file should be able to run on any machine with a Java Runtime (JRE) installed.
 
 This client and/or a browser client can be connected simultaneously, but the update rate will be much

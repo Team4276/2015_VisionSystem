@@ -7,13 +7,9 @@ package test_streamer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +21,6 @@ public class JReceiver
 {
 
     JTargetInfo m_currentTargetInfo = null;
-    String m_host = "192.168.1.120";
     DatagramSocket m_bbbTextSocket = null;
     BufferedReader m_in = null;
     Boolean m_initOK = false;
@@ -34,16 +29,15 @@ public class JReceiver
     {
         m_currentTargetInfo = new JTargetInfo();
         m_initOK = false;
-        try 
+        try
         {
-            m_bbbTextSocket = new DatagramSocket();
-         }
-        catch(SocketException e)
+            m_bbbTextSocket = new DatagramSocket(5801);
+        } catch (SocketException e)
         {
             System.err.println("SocketException");
             m_initOK = false;
             m_in = new BufferedReader(new InputStreamReader(System.in));
-       }
+        }
         if (m_in == null)
         {
             System.err.println("IN == null");
@@ -59,18 +53,17 @@ public class JReceiver
         {
             Integer iCount = 0;
             String result;
-            InetAddress IPAddress = InetAddress.getByName("192.168.1.120");
             byte[] receiveData = new byte[1024];
             while (true)
             {
-                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length, IPAddress, 5801);
+                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 m_bbbTextSocket.receive(receivePacket);
                 String textIn = new String(receivePacket.getData());
                 m_currentTargetInfo.initTargetInfoFromText(textIn);
                 iCount++;
                 result = iCount.toString();
                 result += " -- ";
-                result += textIn;
+                result += m_currentTargetInfo.displayText();
                 System.out.println(result);
             }
         } catch (IOException ex)
