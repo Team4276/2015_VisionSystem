@@ -81,8 +81,6 @@ ${OBJECTDIR}/utils.o: utils.cpp
 
 # Subprojects
 .build-subprojects:
-	cd plugins/input_uvc && ${MAKE}  -f Makefile CONF=Release
-	cd plugins/output_http && ${MAKE}  -f Makefile CONF=Release
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -91,8 +89,6 @@ ${OBJECTDIR}/utils.o: utils.cpp
 
 # Subprojects
 .clean-subprojects:
-	cd plugins/input_uvc && ${MAKE}  -f Makefile CONF=Release clean
-	cd plugins/output_http && ${MAKE}  -f Makefile CONF=Release clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

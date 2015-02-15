@@ -21,8 +21,8 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
-CND_DLIB_EXT=so
+CND_PLATFORM=None-Windows
+CND_DLIB_EXT=dll
 CND_CONF=Release
 CND_DISTDIR=dist
 CND_BUILDDIR=build
@@ -58,9 +58,9 @@ LDLIBSOPTIONS=-ldl -lpthread
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/viking_mpg_streamer
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/viking_mpg_streamer.exe
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/viking_mpg_streamer: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/viking_mpg_streamer.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/viking_mpg_streamer ${OBJECTFILES} ${LDLIBSOPTIONS}
 
@@ -87,7 +87,7 @@ ${OBJECTDIR}/utils.o: utils.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/viking_mpg_streamer
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/viking_mpg_streamer.exe
 
 # Subprojects
 .clean-subprojects:

@@ -15,13 +15,13 @@ CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Debug=vikingmpgstreamer.tar
 CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/vikingmpgstreamer.tar
 # Release configuration
-CND_PLATFORM_Release=GNU-Linux-x86
-CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
+CND_PLATFORM_Release=None-Windows
+CND_ARTIFACT_DIR_Release=dist/Release/None-Windows
 CND_ARTIFACT_NAME_Release=viking_mpg_streamer
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/viking_mpg_streamer
-CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
+CND_ARTIFACT_PATH_Release=dist/Release/None-Windows/viking_mpg_streamer
+CND_PACKAGE_DIR_Release=dist/Release/None-Windows/package
 CND_PACKAGE_NAME_Release=vikingmpgstreamer.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/vikingmpgstreamer.tar
+CND_PACKAGE_PATH_Release=dist/Release/None-Windows/package/vikingmpgstreamer.tar
 #
 # include compiler specific variables
 #
