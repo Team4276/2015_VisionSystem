@@ -98,7 +98,10 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
 #ifdef COLORFILTER_MARINA_HALLWAY_LIFECAM
         cv::inRange(img_hsv, cv::Scalar(30, 0, 90), cv::Scalar(220, 80, 160), gray_blob);
 #endif
-            
+                   
+#ifdef COLORFILTER_MARINA_HALLWAY_LOGITECH
+        cv::inRange(img_hsv, cv::Scalar(30, 0, 120), cv::Scalar(220, 80, 160), gray_blob);
+#endif
         iCount++;
         if ((iCount % 17) == 0)
         {
@@ -201,7 +204,7 @@ bool CToteDetector::filterContoursToFindLargestBlob(
     {
         tempRect = cv::minAreaRect(cv::Mat(listContours[i]));
         area = tempRect.size.width * tempRect.size.height;
-        //if ((area > 10000.0) && (area < 15000.0))
+        if ((area > 6500.0) && (area < 8500.0))
         {
             if(max < area)
             {
