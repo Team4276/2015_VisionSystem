@@ -102,8 +102,12 @@ void CToteDetector::detectBlobs(CVideoFrame * pFrame, CFrameGrinder* pFrameGrind
 #ifdef COLORFILTER_MARINA_HALLWAY_LOGITECH
         cv::inRange(img_hsv, cv::Scalar(30, 0, 120), cv::Scalar(220, 80, 160), gray_blob);
 #endif
+      
+#ifdef COLORFILTER_LA_SPORTS_ARENA_LOGITECH
+        cv::inRange(img_hsv, cv::Scalar(15, 0, 40), cv::Scalar(55, 70, 200), gray_blob);        
+#endif
         iCount++;
-        if ((iCount % 17) == 0)
+        //if ((iCount % 17) == 0)
         {
             pFrameGrinder->m_testMonitor.saveFrameToJpeg(gray_blob);
         }
