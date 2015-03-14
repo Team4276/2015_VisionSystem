@@ -284,6 +284,8 @@ int input_init(input_parameter *param, int id)
     if(format == V4L2_PIX_FMT_YUYV)
         IPRINT("JPEG Quality......: %d\n", gquality);
 
+#ifndef TEST_USE_JPEGS_NOT_CAMERA
+    
     DBG("vdIn pn: %d\n", id);
     /* open video device and prepare data structure */
     if(init_videoIn(cams[id].videoIn, dev, width, height, fps, format, 1, cams[id].pglobal, id) < 0) {
@@ -300,7 +302,7 @@ int input_init(input_parameter *param, int id)
         initDynCtrls(cams[id].videoIn->fd);
 
     enumerateControls(cams[id].videoIn, cams[id].pglobal, id); // enumerate V4L2 controls after UVC extended mapping
-
+#endif   // TEST_USE_JPEGS_NOT_CAMERA
     return 0;
 }
 
@@ -429,6 +431,21 @@ void *cam_thread(void *arg)
     sPath += "/MarinaHallwayLifecam2_4Feb2015.jpg";
 #endif
     
+    
+#ifdef COLORFILTER_MARINA_HALLWAY_LOGITECH
+    sPath += "/logitech_marina_hallway_17Feb2015.jpg";
+    frame1 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
+    sPath = sBasePath;
+    sPath += "/logitech_marina_hallway_17Feb2015.jpg";
+#endif
+ 
+#ifdef COLORFILTER_LA_SPORTS_ARENA_LOGITECH
+    sPath += "/LB_sports_arena_logitech4.jpg";
+    frame1 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
+    sPath = sBasePath;
+    sPath += "/LB_sports_arena_logitech3.jpg";
+#endif
+
     
     cv::Mat frame2 = cv::imread(sPath.c_str(), CV_LOAD_IMAGE_COLOR);
     if (frame2.empty()) {
